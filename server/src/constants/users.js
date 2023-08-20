@@ -1,0 +1,12 @@
+export const USER_WHITELIST_KEYS_FOR_UPDATE = [];
+export const USER_BLACKLIST_KEYS_FOR_UPDATE = ["_id", "password", "__v"];
+export const USERS_ROLES = ["OPERATION", "ADMIN", "SUPER_ADMIN"];
+export const USERS_ROLES_MAPPING = {
+    OPERATION: "OPERATION",
+    ADMIN: "ADMIN",
+    SUPER_ADMIN: "SUPER_ADMIN",
+};
+export default {
+    USER_BLACKLIST_KEYS_FOR_UPDATE,
+    USER_WHITELIST_KEYS_FOR_UPDATE,
+};

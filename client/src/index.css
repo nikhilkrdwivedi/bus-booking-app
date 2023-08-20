@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes rotate-left-right {
+  0% {
+    transform: rotate(0deg) 10s linear infinite;
+  }
+  50% {
+    transform: rotate(-90deg) 10s linear infinite;
+  }
+  100% {
+    transform: rotate(0deg) 10s linear infinite;
+  }
+}

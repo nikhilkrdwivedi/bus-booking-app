@@ -1,0 +1,38 @@
+{
+  "name": "launchpad",
+  "version": "1.0.0",
+  "description": "This is server for launchpad app.",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon src/app.js",
+    "start:docker": "docker-compose up",
+    "build:docker": "docker-compose build",
+    "build": "rm -rf dist/ && tsc -p .",
+    "test": "jest --detectOpenHandles --testTimeout=5000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikhilkrdwivedi/launchpad.git"
+  },
+  "author": "@nikhilkrdwivedi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nikhilkrdwivedi/launchpad/issues"
+  },
+  "homepage": "https://github.com/nikhilkrdwivedi/launchpad#readme",
+  "devDependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.4.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^3.0.1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.1435.0",
+    "bcrypt": "^5.1.0",
+    "joi": "^17.9.2"
+  }
+}
