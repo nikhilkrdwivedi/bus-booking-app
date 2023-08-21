@@ -47,7 +47,7 @@ export default function Header() {
       <div className="flex items-center gap-4">
          <ul className='flex items-center justify-start gap-4'>
           <li>Onboarding</li>
-          <li>Vachile</li>
+          <li>Vehicle</li>
           <li>Trip Planner</li>
          </ul>
       

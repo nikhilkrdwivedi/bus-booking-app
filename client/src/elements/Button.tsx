@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 export default function Button({
   title,
   Icon,
-  btnClass,
+  classNames,
   onClick,
   IconSize = 18,
   iconClass,
@@ -12,7 +12,7 @@ export default function Button({
   return (
     <button
       onClick={onClick}
-      className={`rounded-md  text-center flex items-center justify-evenly ${btnClass}`}
+      className={`rounded-md  text-center flex items-center justify-evenly ${classNames}`}
     >
       {Icon && <Icon size={IconSize} className={iconClass} />}
       {title}
@@ -23,7 +23,7 @@ export default function Button({
 type ButtonTypes = {
   title?: string,
   Icon?: any,
-  btnClass:string,
+  classNames?:string,
   IconSize?: number,
   iconClass?: string,
   onClick?:  (event: React.MouseEvent<HTMLButtonElement>) => void,

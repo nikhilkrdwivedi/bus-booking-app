@@ -261,7 +261,7 @@ export default App
 //                   <div className='text-md font-normal text-gray-900'> <span className='font-semibold text-gray-600'>Total Fare:</span> 3600 [1200 X 3]</div>
 //                 </div>
 //                 <div className='my-2'>
-//                   <Button btnClass='w-full bg-green-400 p-1.5 hover:bg-green-600 hover:text-white' title='Continue to Payment' />
+//                   <Button classNames='w-full bg-green-400 p-1.5 hover:bg-green-600 hover:text-white' title='Continue to Payment' />
 //                 </div>
 //               </Card>
 //             </div>

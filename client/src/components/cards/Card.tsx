@@ -11,4 +11,4 @@ export default function Card({cardClass, headerClass, title, bodyClass, children
   )
 }
 
-type CardTypes = {cardClass: string, headerClass: string, title: string, bodyClass:string, children: ReactNode}
+type CardTypes = {cardClass?: string, headerClass?: string, title?: string, bodyClass?:string, children?: ReactNode}

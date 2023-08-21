@@ -17,7 +17,7 @@ function Input({
   readOnly,
   error,
   errorClass,
-}:any) {
+}:InputType) {
   const [showPassword, setShowPassword] = useState(true);
   return (
     <div
@@ -79,7 +79,7 @@ function Input({
             title="Click to copy"
             className="cursor-pointer hover:text-green-600 h-full leading-snug font-normal text-center text-slate-300 absolute bg-transparent rounded text-base items-center justify-center w-8 right-0 pr-3 py-6"
             onClick={async () => {
-              await navigator.clipboard.writeText(value);
+              await navigator.clipboard.writeText(value as any);
             }}
           >
             <TbClipboardCopy size={18} />
@@ -90,7 +90,19 @@ function Input({
     </div>
   );
 }
-
+type InputType = {
+  label?: string,
+  type: string,
+  value?: string|number,
+  onChange?: (value: any) => void,
+  placeholder?: string,
+  disabled?: boolean,
+  classNames?: string,
+  isHide?: boolean,
+  readOnly?: boolean,
+  error?: string,
+  errorClass?: string,
+};
 // Input.propTypes = {
 //   label: PropTypes.string,
 //   type: PropTypes.string,

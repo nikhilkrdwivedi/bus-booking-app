@@ -1,13 +1,47 @@
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;
-
-const vehicleSchema = new Schema(
+const addressSchema = new Schema({
+    streetOne: {
+      type: String,
+      required: true
+    },
+    streetTwo:{
+      type: String,
+    },
+    city: {
+        type: String,
+        required: true
+      },
+      state: {
+        type: String,
+        required: true
+      },
+      country: {
+        type: String,
+        required: true
+      },
+      zipcode: {
+        type: String,
+        required: true
+      },
+  },{_id:false});
+  const contactSchema = new Schema({
+    email: {
+      type: String,
+    },
+    phone:{
+      type: String,
+    },
+  },{_id:false})
+const providerSchema = new Schema(
   {
     company: {
       type: String,
       trim: true,
       required: true,
     },
+    address: addressSchema,
+    contact: contactSchema,
     vehicles:[{ type: Schema.ObjectId, ref: 'vehicles' }],
     createdBy: { type: Schema.ObjectId, ref: 'users' },
     isActive: {
@@ -18,4 +52,4 @@ const vehicleSchema = new Schema(
   { timestamps: true }
 );
 
-export default model(`vehicles`, vehicleSchema, `vehicles`);
+export default model(`providers`, providerSchema, `providers`);

@@ -41,7 +41,7 @@ export default function SignIn({
         />
         <Button
           title={"Sign In"}
-          btnClass="!w-full bg-green-500 p-2 text-white font-semibold text-md"
+          classNames="!w-full bg-green-500 p-2 text-white font-semibold text-md"
           onClick={submitForm}
         />
         {/* <div className="text-gray-600 dark:text-gray-200 text-sm font-semibold text-center p-2">

@@ -1,10 +1,32 @@
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
-const seatSchema = new Schema({
+const capacitySchema = new Schema({
   seating: {
     type: Number,
-    default: 0
+    default: 0,
+    required: true
+  },
+  rows:{
+    type: Number,
+    default: 0,
+    required: true
+  },
+  columns: {
+    type: Number,
+    default: 0,
+    required: true
+  },
+  gallaryColumns: {
+    type: Number,
+    default: 0,
+    required: true
+  },
+  layout:{
+    type:[[{
+      seatStatus:{type: String},
+    }]], 
+    required: true
   }
 })
 
@@ -24,13 +46,20 @@ const vehicleSchema = new Schema(
       type: String,
       trim: true,
       required: true,
+      unique: true,
     },
-    seats: seatSchema,
+    capacity: capacitySchema,
+    purchase: {
+      type: String,
+      trim: true,
+      required: true, 
+    },
     type: {
       type: String,
       enum: ['bus'],
       default: 'bus'
     },
+
     provider: {
       type: Schema.ObjectId, ref: 'provider', required: true
     },

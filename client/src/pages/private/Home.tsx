@@ -38,7 +38,7 @@ export default function Home() {
         </div>
         <div className='col-span-1 md:col-span-3 border-t-2'>
           <div className='flex justify-center items-end flex-col p-4'>
-          <Button btnClass='w-32 bg-green-400 p-1.5 hover:bg-green-500 text-sm font-semibold hover:text-white' title='Book Now' onClick={()=>naviagte('/booking', {state:bus})} />
+          <Button classNames='w-32 bg-green-400 p-1.5 hover:bg-green-500 text-sm font-semibold hover:text-white' title='Book Now' onClick={()=>naviagte('/booking', {state:bus})} />
           </div>
         </div>
 

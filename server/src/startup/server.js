@@ -5,6 +5,8 @@ import authenticationRouter from "../routes/authentications.js";
 import usersRouter from "../routes/users.js";
 // import todoRouter from "../routes/todos";
 import morgan from "morgan";
+import providerRouter from "../routes/providers.js";
+import vehicleRouter from "../routes/vehicles.js";
 // import { sendEmail } from "../helpers/sendEmail.js";
 // import { sendOtpTemplate } from "../templates/html/sendOtp.js";
 
@@ -22,6 +24,8 @@ export function createServer() {
   //   app.use("/api/v1/todos/", todoRouter);
   app.use("/api/v1/authentications/", authenticationRouter);
   app.use("/api/v1/users/", usersRouter);
+  app.use("/api/v1/providers/", providerRouter);
+  app.use("/api/v1/vehicles/", vehicleRouter);
 
   app.get("/", (request, response) => {
     // IN_PROGRESS STUFF

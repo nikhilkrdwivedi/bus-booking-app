@@ -49,7 +49,7 @@ export default function SignUp({
         />
         <Button
           title={"Register"}
-          btnClass="!w-full bg-green-500 p-2 !my-2 text-white font-semibold text-md"
+          classNames="!w-full bg-green-500 p-2 !my-2 text-white font-semibold text-md"
           onClick={submitForm}
         />
       </div>

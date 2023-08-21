@@ -199,7 +199,7 @@ export default function Booking() {
                   <div className='text-md font-normal text-gray-900'> <span className='font-semibold text-gray-600'>Total Fare:</span> {selectedSeatsInfo?.total}</div>
                 </div>
                 <div className='my-2'>
-                  <Button btnClass='w-full bg-green-400 p-1.5 hover:bg-green-600 hover:text-white' title='Continue to Payment' onClick={()=>{bookSeat()}} />
+                  <Button classNames='w-full bg-green-400 p-1.5 hover:bg-green-600 hover:text-white' title='Continue to Payment' onClick={()=>{bookSeat()}} />
                 </div>
               </Card>
             </div>

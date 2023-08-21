@@ -91,7 +91,7 @@ export default function GetStarted() {
         onClick={() => {
           navigate("/");
         }}
-        btnClass="!fixed top-0 left-0 m-4 md:m-12 bg-gray-200 dark:bg-gray-800 h-[34px] w-[34px] text-gray-400 dark:text-gray-600  "
+        classNames="!fixed top-0 left-0 m-4 md:m-12 bg-gray-200 dark:bg-gray-800 h-[34px] w-[34px] text-gray-400 dark:text-gray-600  "
         Icon={IoReturnUpBackOutline}
         IconSize={28}
       />
