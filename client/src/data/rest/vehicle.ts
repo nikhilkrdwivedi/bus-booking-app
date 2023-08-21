@@ -11,7 +11,15 @@ export function fetchVehicles(query:any={}) {
         null,
     );
 }
-export function createVehicles(payload:any) {
+export function fetchVehicle(vehicleId:string) {
+    return axiosHelper(
+        `${ENV.BASE_URL + VEHICLE_ENDPOINT}/${vehicleId}`,
+        'GET',
+        null,
+        null,
+    );
+}
+export function createVehicle(payload:any) {
     return axiosHelper(
         `${ENV.BASE_URL + VEHICLE_ENDPOINT}/`,
         'POST',
@@ -19,13 +27,13 @@ export function createVehicles(payload:any) {
         payload,
     );
 }
-export function updateVehicles(payload:any,userId: string) {
+export function updateVehicle(payload:any,vehicleId: string) {
     return axiosHelper(
-        `${ENV.BASE_URL + VEHICLE_ENDPOINT}/${userId}`,
+        `${ENV.BASE_URL + VEHICLE_ENDPOINT}/${vehicleId}`,
         'PUT',
         null,
         payload,
     );
 }
 
-export default { createVehicles, updateVehicles,fetchVehicles };
+export default { fetchVehicle, createVehicle, updateVehicle,fetchVehicles };

@@ -10,11 +10,21 @@ vehicleRouter.post(
   validator.createValidation,
   controller.createVehicle
 );
-// vehicleRouter.put(
-//   "/:_id",
-//   validateToken,
-//   controller.updateProvider
-// );
+vehicleRouter.get(
+  "/",
+  validateToken,
+  controller.getVehicles
+);
+vehicleRouter.get(
+  "/:_id",
+  validateToken,
+  controller.getVehicle
+);
+vehicleRouter.put(
+  "/:_id",
+  validateToken,
+  controller.updateVehicle
+);
 // vehicleRouter.get(
 //   "/",
 //   validateToken,

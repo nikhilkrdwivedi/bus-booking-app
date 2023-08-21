@@ -61,7 +61,7 @@ const vehicleSchema = new Schema(
     },
 
     provider: {
-      type: Schema.ObjectId, ref: 'provider', required: true
+      type: Schema.ObjectId, ref: 'providers', required: true
     },
     isActive: {
       type: Boolean,

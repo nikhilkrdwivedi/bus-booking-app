@@ -8,14 +8,39 @@ import Fieldset from '@elements/Fieldset'
 import Input from '@elements/Input'
 import Select from '@elements/Select'
 import {  fetch } from '@data/rest/providers'
-import { createVehicles, fetchVehicles,} from '@data/rest/vehicle'
+import { createVehicle, fetchVehicles, fetchVehicle, updateVehicle} from '@data/rest/vehicle'
 import { Disclosure } from '@headlessui/react'
 import { useEffect, useState } from 'react'
 import { BiChevronsDown } from 'react-icons/bi'
 import { toast } from 'react-toastify'
 import { useTheme } from '@contexts/ThemeContext'
-export default function Vehicle() {
+import { useLocation } from 'react-router-dom'
+import { getDisplayValue } from '@utils/displayValue'
+export default function VehicleConfig() {
     const { isDarkMode } = useTheme();
+    const location = useLocation(); 
+    console.log({location})
+    const vehicleId =  location?.state?._id || '';
+    // const { state:{_id } } = location;
+    // console.log({state})
+    const fetchVehicleConfig = async(id: string) => {
+        try {
+            const {data} = await fetchVehicle(id);
+            console.log({data:data.data})
+            setVehicleConfigForm(data.data)
+        } catch (error:any) {
+            const errorMsg = error?.response?.data?.message || 'Operation Failed!';
+      toast(errorMsg, {
+        type: "error",
+        theme: isDarkMode ? "dark" : "light",
+      });
+        }
+    }
+    useEffect(()=>{
+        if(vehicleId.length){
+            fetchVehicleConfig(vehicleId)
+        }
+    },[vehicleId])
     const [vehicleConfigForm, setVehicleConfigForm] = useState<any>({
         brand: '', purchase: '', capacity:
         {
@@ -23,9 +48,8 @@ export default function Vehicle() {
         }
     })
     const [providers, setProviders] = useState<any>({});
-    const [selectedProvider, setSelectedProvider] = useState<any>({});
     const renderSeats = () => {
-        let { capacity: { columns, rows, gallaryColumn } } = vehicleConfigForm;
+        let { capacity: { columns , rows, gallaryColumn } = {}  } = vehicleConfigForm ?? {};
         if (columns < 1 || rows < 1) {
             setVehicleConfigForm((prev: any) => ({
                 ...prev,
@@ -84,9 +108,28 @@ export default function Vehicle() {
     const handleVehicleClick = async () => {
         console.log({ vehicleConfigForm })
         try {
-           await  createVehicles(vehicleConfigForm)
+            console.log({vehicleConfigForm})
+            const payload = JSON.parse(JSON.stringify(vehicleConfigForm))
+            const { _id } = payload;
+            console.log({_id})
+            let method:any = createVehicle;
+            if(_id){
+               delete payload['_id'];
+               method = updateVehicle;
+            }
+            console.log({payload})
+           await method(payload, _id)
+           toast('Your changes have been saved.', {
+            type: "success",
+            theme: isDarkMode ? "dark" : "light",
+          });
         } catch (error) {
-            
+            console.log({error})
+            const errorMsg = error?.response?.data?.message || 'Operation Failed!';
+            toast(errorMsg, {
+              type: "error",
+              theme: isDarkMode ? "dark" : "light",
+            });
         }
     }
     const handleVehicleConfigFormeChange= (key: string, value: any, identifier?: string,)=> {
@@ -101,10 +144,10 @@ export default function Vehicle() {
 
             }))
         } else if (identifier === 'provider') {
-            setSelectedProvider(value)
+            // setSelectedProvider(value)
             setVehicleConfigForm((prev: any) => ({
                 ...prev,
-                [key]: value?._id
+                [key]: value
             }))
 
         } else {
@@ -121,7 +164,7 @@ export default function Vehicle() {
     }, [])
     useEffect(() => {
         renderSeats()
-    }, [vehicleConfigForm.capacity.rows, vehicleConfigForm.capacity.columns, vehicleConfigForm.capacity.gallaryColumn])
+    }, [vehicleConfigForm?.capacity?.rows, vehicleConfigForm?.capacity?.columns, vehicleConfigForm?.capacity?.gallaryColumn])
     return (
         <Container className='px-2 md:px-4 lg:px-20 xl:px-32 dark:bg-gray-800 w-full h-screen overflow-auto'>
             <div className='grid grid-cols-1 md:grid-cols-2 gap-4 my-2 md:my-4'>
@@ -143,7 +186,7 @@ export default function Vehicle() {
                                         fieldsetClass='border p-2 border-gray-600 '
                                         legendClass='text-white px-2'
                                     >
-                                        <Select label='Choose Provider*' data={providers?.data} onChange={(value: any) => handleVehicleConfigFormeChange("provider", value, 'provider')} valueKey="_id" displayKey='company' selected={selectedProvider} />
+                                        <Select label='Choose Provider*' data={providers?.data} onChange={(value: any) => handleVehicleConfigFormeChange("provider", value, 'provider')} valueKey="_id" displayKey='company' selected={vehicleConfigForm?.provider} />
                                         {/* <Input type='text' label="Brand*" placeholder="eg: Tata Moters" value={vehicleConfigForm?.brand} onChange={(event: any) => handleVehicleConfigFormeChange("brand", event?.target?.value)} /> */}
                                     </Fieldset>
                                 </Disclosure.Panel>
@@ -231,7 +274,7 @@ export default function Vehicle() {
                         headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
                         bodyClass="p-2"
                         title='Provider Details'>
-                        <KeyValueDisplay keyName='Provider' value={selectedProvider?.company || 'NA'} />
+                        <KeyValueDisplay keyName='Provider' value={getDisplayValue(providers?.data,vehicleConfigForm?.provider,'company') || 'NA'} />
                     </Card>
                     <Card
                         cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"

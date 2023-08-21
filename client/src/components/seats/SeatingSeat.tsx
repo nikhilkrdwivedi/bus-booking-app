@@ -1,7 +1,7 @@
 import { TbArmchair } from 'react-icons/tb'
 import {BsDoorClosed} from 'react-icons/bs'
 export default function SeatingSeat({seat}:any) {
-    console.log(seat)
+    // console.log(seat)
     switch (seat) {
         case 'A':
           return <TbArmchair className="w-8 h-12 text-green-400 fill-green-200 cursor-pointer" />

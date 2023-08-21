@@ -13,7 +13,7 @@ export const create = async (payload = {}) => {
     limit = 0
   ) => {
     try {
-      const result = await VehicleModal.find(query)
+      const result = await VehicleModal.find(query).populate('provider')
         .skip(skip)
         .limit(limit)
         .lean();
@@ -40,6 +40,15 @@ export const update = async (query = {}, payload = {}) => {
     const result = await VehicleModal.findOneAndUpdate(query, payload, {
       new: true,
     });
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const fetchOne = async (query) => {
+  try {
+    const result = await VehicleModal.findOne(query).lean();
     return result;
   } catch (error) {
     throw error;
