@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { TbClipboardCopy } from "react-icons/tb";
@@ -6,6 +5,8 @@ import ErrorText from "@elements/ErrorText";
 // import ErrorText from "./ErrorText";
 
 function Input({
+  min,
+  max,
   label,
   type,
   onChange,
@@ -17,7 +18,7 @@ function Input({
   readOnly,
   error,
   errorClass,
-}:InputType) {
+}: InputType) {
   const [showPassword, setShowPassword] = useState(true);
   return (
     <div
@@ -35,6 +36,8 @@ function Input({
         </div>
 
         <input
+          min={min}
+          max={max}
           readOnly={readOnly}
           type={showPassword ? type : "text"}
           onChange={onChange}
@@ -79,7 +82,7 @@ function Input({
             title="Click to copy"
             className="cursor-pointer hover:text-green-600 h-full leading-snug font-normal text-center text-slate-300 absolute bg-transparent rounded text-base items-center justify-center w-8 right-0 pr-3 py-6"
             onClick={async () => {
-              await navigator.clipboard.writeText(value as any);
+              await navigator.clipboard.writeText(value as never);
             }}
           >
             <TbClipboardCopy size={18} />
@@ -91,17 +94,19 @@ function Input({
   );
 }
 type InputType = {
-  label?: string,
-  type: string,
-  value?: string|number,
-  onChange?: (value: any) => void,
-  placeholder?: string,
-  disabled?: boolean,
-  classNames?: string,
-  isHide?: boolean,
-  readOnly?: boolean,
-  error?: string,
-  errorClass?: string,
+  min?: string | number | Date;
+  max?: string | number | Date;
+  label?: string;
+  type: string;
+  value?: string | number | Date;
+  onChange?: (value: any) => void;
+  placeholder?: string;
+  disabled?: boolean;
+  classNames?: string;
+  isHide?: boolean;
+  readOnly?: boolean;
+  error?: string;
+  errorClass?: string;
 };
 // Input.propTypes = {
 //   label: PropTypes.string,

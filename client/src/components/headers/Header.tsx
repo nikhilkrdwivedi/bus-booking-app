@@ -1,9 +1,9 @@
-import { useAuth } from '@contexts/AuthContext'
-import React from 'react'
+import { useAuth } from "@contexts/AuthContext";
+import React from "react";
 
 // export default function Header() {
 //   const {userContext} = useAuth()
-//   console.log({userContext})
+//   // console.log({userContext})
 //   return (
 //     <div className='h-16 flex justify-between items-center bg-transparent px-4 lg:px-32'>
 //         <div className='flex justify-between items-center w-full'>
@@ -21,8 +21,8 @@ import { useTheme } from "@contexts/ThemeContext";
 import ThemeSwitch from "@components/themes/ThemeSwitch";
 import { useNavigate } from "react-router-dom";
 import UserMenu from "./UserMenu";
-import MobileHeader from './MobileHeader';
-import Test from './Test';
+import MobileHeader from "./MobileHeader";
+import Test from "./Test";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -44,26 +44,37 @@ export default function Header() {
         />
       </div>
       <div className="flex justify-between items-center gap-4 w-full">
-      <div className="flex items-center gap-4">
-         <ul className='flex items-center justify-start gap-4'>
-          <li>Onboarding</li>
-          <li>Vehicle</li>
-          <li>Trip Planner</li>
-         </ul>
-      
+        <div className="flex items-center gap-4">
+          <ul className="flex items-center justify-start gap-4">
+            <li
+              onClick={() => {
+                navigate("/providers");
+              }}
+            >
+              Providers
+            </li>
+            <li
+              onClick={() => {
+                navigate("/vehicle");
+              }}
+            >
+              Vehicle
+            </li>
+            <li
+              onClick={() => {
+                navigate("/trip-planner");
+              }}
+            >
+              Trip Planner
+            </li>
+          </ul>
+        </div>
+        <div className="flex items-center gap-4">
+          <UserMenu />
 
-        
+          <ThemeSwitch />
+        </div>
       </div>
-      <div className="flex items-center gap-4">
-       
-        <UserMenu />
-
-        <ThemeSwitch />
-      </div>
-         
-      </div>
-     
     </div>
   );
 }
-

@@ -1,0 +1,5 @@
+export const TRIP_STATUS = {
+    IN_PROGRESS: 'IN_PROGRESS',
+    UPCOMING: 'UPCOMING',
+    COMPLETED: 'COMPLETED'
+}

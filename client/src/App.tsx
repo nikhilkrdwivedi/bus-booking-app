@@ -1,75 +1,86 @@
-
-import Container from '@components/containers/Container'
-import './App.css'
-import moment from 'moment'
-import { TbArmchair } from 'react-icons/tb'
-import { FaRupeeSign } from 'react-icons/fa'
-import { GiSteeringWheel } from 'react-icons/gi'
-import { BiBus } from 'react-icons/bi'
-import { FiMapPin } from 'react-icons/fi'
-import { MdOutlineDepartureBoard } from 'react-icons/md'
-import { useState } from 'react'
-import { BUS_SEATING_SEAT_TYPES } from '@data/static/seatTypes'
-import Card from '@components/cards/Card'
-import Header from '@components/headers/Header'
-import Button from '@elements/Button'
-import { BUS_SEATING_SEATS,BUS_SLEEPER_SEATS } from '@data/static/busSeats'
-import SeatingSeat from '@components/seats/SeatingSeat'
-import SleeperSeat from '@components/seats/SleeperSeat'
-import { BUS_DETAILS } from '@data/static/busDetails'
-import Home from '@pages/private/Home'
-import { Route, Routes, BrowserRouter as Router, Outlet, } from 'react-router-dom'
-import Booking from '@pages/private/Booking'
-import Private from '@routes/Private'
-import Public from '@routes/Public'
-import { useAuth } from '@contexts/AuthContext'
+import Container from "@components/containers/Container";
+import "./App.css";
+import moment from "moment";
+import { TbArmchair } from "react-icons/tb";
+import { FaRupeeSign } from "react-icons/fa";
+import { GiSteeringWheel } from "react-icons/gi";
+import { BiBus } from "react-icons/bi";
+import { FiMapPin } from "react-icons/fi";
+import { MdOutlineDepartureBoard } from "react-icons/md";
+import { useState } from "react";
+import { BUS_SEATING_SEAT_TYPES } from "@data/static/seatTypes";
+import Card from "@components/cards/Card";
+import Header from "@components/headers/Header";
+import Button from "@elements/Button";
+import { BUS_SEATING_SEATS, BUS_SLEEPER_SEATS } from "@data/static/busSeats";
+import SeatingSeat from "@components/seats/SeatingSeat";
+import SleeperSeat from "@components/seats/SleeperSeat";
+import { BUS_DETAILS } from "@data/static/busDetails";
+import Home from "@pages/private/Home";
+import {
+  Route,
+  Routes,
+  BrowserRouter as Router,
+  Outlet,
+} from "react-router-dom";
+import Booking from "@pages/private/Booking";
+import Private from "@routes/Private";
+import Public from "@routes/Public";
+import { useAuth } from "@contexts/AuthContext";
 function App() {
   const { isAuthenticated } = useAuth();
   const [seat, setSeat] = useState(BUS_SLEEPER_SEATS);
   const [selectedSeats, setSelectSeats] = useState([]);
   // const [isAuthenticated, setIsAuthenticate] = useState(false)
   const getSeat = (col: string) => {
-
     switch (col) {
-      case 'A':
-        return <TbArmchair className="w-8 h-12 text-green-400 fill-green-200 cursor-pointer" />
-      case 'B':
-        return <TbArmchair className="w-8 h-12 text-red-400 fill-red-200 cursor-not-allowed" />
-      case 'S':
-        return <TbArmchair className="w-8 h-12 text-sky-400 fill-sky-200 cursor-pointer" />
-      case 'R':
-        return <TbArmchair className="w-8 h-12 text-gray-400 fill-gray-200 cursor-not-allowed" />
+      case "A":
+        return (
+          <TbArmchair className="w-8 h-12 text-green-400 fill-green-200 cursor-pointer" />
+        );
+      case "B":
+        return (
+          <TbArmchair className="w-8 h-12 text-red-400 fill-red-200 cursor-not-allowed" />
+        );
+      case "S":
+        return (
+          <TbArmchair className="w-8 h-12 text-sky-400 fill-sky-200 cursor-pointer" />
+        );
+      case "R":
+        return (
+          <TbArmchair className="w-8 h-12 text-gray-400 fill-gray-200 cursor-not-allowed" />
+        );
 
       default:
-        return <div className="w-8 h-12" />
+        return <div className="w-8 h-12" />;
     }
-
-  }
-  const updateSeat = (selectedSeat: string, rowIndex: number, colIndex: number) => {
-    const action = selectedSeat === 'A' ? 'S' : 'A';
-    console.log({ selectedSeat, rowIndex, colIndex })
+  };
+  const updateSeat = (
+    selectedSeat: string,
+    rowIndex: number,
+    colIndex: number
+  ) => {
+    const action = selectedSeat === "A" ? "S" : "A";
+    // console.log({ selectedSeat, rowIndex, colIndex });
     const _seat = JSON.parse(JSON.stringify(seat));
-    console.log({ _seat,action })
-    _seat[rowIndex][colIndex]['bookingStatus'] = action
-    setSeat(_seat)
-  }
+    // console.log({ _seat, action });
+    _seat[rowIndex][colIndex]["bookingStatus"] = action;
+    setSeat(_seat);
+  };
   return (
     <>
-    {isAuthenticated ? 
-    <Private />:
-    <Public />
-  }
-    {/* <Header />
+      {isAuthenticated ? <Private /> : <Public />}
+      {/* <Header />
     <Routes>
     <Route path='/' element={<Home />} />
     <Route path='/home' element={<Home />} />
     <Route path='/booking' element={<Booking />} />
     </Routes> */}
     </>
-  )
+  );
 }
 
-export default App
+export default App;
 
 /*
 
@@ -111,10 +122,9 @@ export default App
   </div>
 </div>
 */
- 
 
 // <div className='grid grid-cols-1 md:grid-cols-3'>
-          
+
 //           </div>
 //           <div className='grid grid-cols-1 xl:grid-cols-4 gap-4'>
 //             <div className='md:col-span-1 lg:col-span-1'>
@@ -133,7 +143,7 @@ export default App
 //                       <span className='font-semibold text-green-600'> Origin: </span> 1203 and 1204, Level 12, Building No. 20, Raheja Mindspace, Cyberabad, Madhapur, Hitech City Hyderabad Hyderabad TG IN 500081
 //                     </div>
 //                   </div>
-  
+
 //                   <div className='flex items-center gap-2'>
 //                     <div>
 //                       <FiMapPin className="text-red-600 w-8 h-8" />
@@ -141,7 +151,7 @@ export default App
 //                     <div className='text-sm py-2'>
 //                       <span className='font-semibold text-red-600' >Destination:</span> No 3, RMZ Infinity - Tower E, Old Madras Road, 4th & 5th Floors, Bangalore Bangalore KA 560016 IN</div>
 //                   </div>
-  
+
 //                   <div className='flex items-center gap-2'>
 //                     <div>
 //                       <BiBus className="text-sky-600  w-9 h-9" />
@@ -149,7 +159,7 @@ export default App
 //                     <div className='text-sm py-2'>
 //                       <span className='font-semibold text-sky-600' >Bus Number:</span> KN-09-NC-9089</div>
 //                   </div>
-  
+
 //                   <div className='flex items-center gap-2'>
 //                     <div>
 //                       <MdOutlineDepartureBoard className="text-sky-600  w-10 h-10" />
@@ -157,7 +167,7 @@ export default App
 //                     <div className='text-sm py-2'>
 //                       <span className='font-semibold text-sky-600' >Departure:</span> 18/08/2023 11:45 PM</div>
 //                   </div>
-  
+
 //                   <div className='flex items-center gap-2'>
 //                     <div>
 //                       <MdOutlineDepartureBoard className="text-sky-600  w-10 h-10" />
@@ -178,7 +188,7 @@ export default App
 //                   <div className=' text-md font-semibold text-gray-600'>Front Side</div>
 //                 </div>
 //                 <div className='flex flex-col justify-center items-center p-4 bg-gray-100 overflow-auto'>
-  
+
 //                   {seat.map((row: any, rowIndex: number) => (
 //                     <div key={rowIndex} className='flex items-center gap-4'>
 //                       {row.map((col: any, colIndex: number) => (
@@ -190,7 +200,7 @@ export default App
 //                         </button>
 //                       ))}
 //                     </div>
-  
+
 //                   ))}
 //                 </div>
 //                 <div className='bg-gray-300 flex justify-center items-center px-4 py-2'>
@@ -207,7 +217,7 @@ export default App
 //                   <div className=' text-md font-semibold text-gray-600'>Front Side</div>
 //                 </div>
 //                 <div className='flex flex-col justify-center items-center p-4 bg-gray-100 overflow-auto'>
-  
+
 //                   {seat.map((row: any, rowIndex: number) => (
 //                     <div key={rowIndex} className='flex items-center gap-4'>
 //                       {row.map((col: any, colIndex: number) => (
@@ -219,14 +229,14 @@ export default App
 //                         </button>
 //                       ))}
 //                     </div>
-  
+
 //                   ))}
 //                 </div>
 //                 <div className='bg-gray-300 flex justify-center items-center px-4 py-2'>
 //                   <div className=' text-md font-semibold text-gray-600'>Back Side</div>
 //                 </div>
 //               </Card>
-  
+
 //             <div className='md:col-span-1 lg:col-span-1'>
 //               <Card
 //                 title={"Seat Info"}
@@ -239,8 +249,8 @@ export default App
 //                   >
 //                     {<SleeperSeat seat={item.symbol} >
 //                        </SleeperSeat>}
-//                        <span className='text-md font-semibold text-gray-600'>{item.label}</span> 
-  
+//                        <span className='text-md font-semibold text-gray-600'>{item.label}</span>
+
 //                   </div>
 //                 ))}
 //               </Card>

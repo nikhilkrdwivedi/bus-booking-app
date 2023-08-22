@@ -10,14 +10,14 @@ const createRequest = {
   number: joi.string().trim().required(),
   purchase: joi.string().trim().required(),
   capacity: joi.object({
-    seating: joi.number().required(),
-    rows:joi.number().optional(),
-    columns:joi.number().required(),
-    gallaryColumn:joi.number().required(),
-    layout:joi.array().items(
-        joi.array().items(joi.object({
-            seatStatus: joi.string().required()
-        })).required()
+    availableSeats: joi.number().optional(),
+    rows: joi.number().optional(),
+    columns: joi.number().required(),
+    gallaryColumn: joi.number().required(),
+    layout: joi.array().items(
+      joi.array().items(joi.object({
+        seatStatus: joi.string().required()
+      })).required()
     ).required(),
   }).required(),
 };
@@ -37,5 +37,5 @@ export const createValidation = (
 };
 
 export default {
-    createValidation,
+  createValidation,
 };

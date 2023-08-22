@@ -1,3 +1,4 @@
+/* eslint-disable no-unsafe-optional-chaining */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Card from "@components/cards/Card";
 import SeatOptionsCard from "@components/cards/SeatOptionsCard";
@@ -9,27 +10,28 @@ import Fieldset from "@elements/Fieldset";
 import Input from "@elements/Input";
 import Select from "@elements/Select";
 import { fetch } from "@data/rest/providers";
-import { createVehicle, fetchVehicle, updateVehicle } from "@data/rest/vehicle";
+import { BiTrip } from "react-icons/bi";
+// import { createVehicle, fetchVehicle, updateVehicle } from "@data/rest/vehicle";
 import { Disclosure } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { BiChevronsDown } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { useTheme } from "@contexts/ThemeContext";
 import { useLocation } from "react-router-dom";
-import { getDisplayValue } from "@utils/displayValue";
+// import { getDisplayValue } from "@utils/displayValue";
+import { createTrip, fetchTrip, updateTrip } from "@data/rest/tripPlanner";
 import moment from "moment";
-export default function VehicleConfig() {
+import { getFormattedDate } from "@utils/dates";
+export default function TripConfig() {
   const { isDarkMode } = useTheme();
   const location = useLocation();
   // console.log({ location });
-  const vehicleId = location?.state?._id || "";
-  // const { state:{_id } } = location;
-  // // console.log({state})
-  const fetchVehicleConfig = async (id: string) => {
+  const tripId = location?.state?._id || "";
+  const fetchTripConfig = async (id: string) => {
     try {
-      const { data } = await fetchVehicle(id);
+      const { data } = await fetchTrip(id);
       // console.log({ data: data.data });
-      setVehicleConfigForm(data.data);
+      setTripConfigForm(data.data);
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || "Operation Failed!";
       toast(errorMsg, {
@@ -39,73 +41,27 @@ export default function VehicleConfig() {
     }
   };
   useEffect(() => {
-    if (vehicleId.length) {
-      fetchVehicleConfig(vehicleId);
+    if (tripId.length) {
+      fetchTripConfig(tripId);
     }
-  }, [vehicleId]);
-  const [vehicleConfigForm, setVehicleConfigForm] = useState<any>({
-    brand: "",
-    purchase: "",
-    capacity: {
-      columns: 0,
-      rows: 0,
-      gallaryColumn: 0,
-      seating: 0,
-    },
-  });
+  }, [tripId]);
+  // const fetchVehicleConfig = async (id: string) => {
+  //   try {
+  //     const { data } = await fetchVehicle(id);
+  //     // console.log({ data: data.data });
+  //     setTripConfigForm(data.data);
+  //   } catch (error: any) {
+  //     const errorMsg = error?.response?.data?.message || "Operation Failed!";
+  //     toast(errorMsg, {
+  //       type: "error",
+  //       theme: isDarkMode ? "dark" : "light",
+  //     });
+  //   }
+  // };
+  const [tripConfigForm, setTripConfigForm] = useState<any>({});
 
   const [providers, setProviders] = useState<any>({});
-  function mergeLayouts(layout1: any[], layout2: any[], defaultValue: any) {
-    const result = [];
 
-    for (let i = 0; i < layout1.length; i++) {
-      const mergedRow = [];
-      for (let j = 0; j < layout1[i].length; j++) {
-        if (layout2[i] && layout2[i][j] !== undefined) {
-          mergedRow.push(layout2[i][j]);
-        } else if (layout1[i] && layout1[i][j] !== undefined) {
-          mergedRow.push(layout1[i][j]);
-        } else {
-          mergedRow.push(defaultValue);
-        }
-      }
-      result.push(mergedRow);
-    }
-
-    return result;
-  }
-  const renderSeats = () => {
-    const { capacity: { columns, rows, gallaryColumn, layout } = {} } =
-      vehicleConfigForm ?? {};
-    if (columns < 1 || rows < 1) {
-      setVehicleConfigForm((prev: any) => ({
-        ...prev,
-        capacity: {
-          ...prev.capacity,
-          layout: [],
-        },
-      }));
-      return;
-    }
-    // Initialize an empty seat matrix
-    // console.log({ gallaryColumn, layout });
-    const matrix = new Array(rows).fill("").map((_, index) => {
-      const array = new Array(columns).fill({ seatStatus: "A" });
-      if (index < rows - 1) {
-        array[gallaryColumn] = { seatStatus: "G" };
-      }
-      return array;
-    });
-    const _layout = mergeLayouts(matrix, layout, { seatStatus: "A" });
-
-    setVehicleConfigForm((prev: any) => ({
-      ...prev,
-      capacity: {
-        ...prev.capacity,
-        layout: _layout,
-      },
-    }));
-  };
   const fetchProviders = async () => {
     try {
       const { data } = await fetch({ sendAllRecords: "YES" });
@@ -127,9 +83,9 @@ export default function VehicleConfig() {
     // console.log({ type, rowIndex, colIndex });
     const {
       capacity: { layout },
-    } = vehicleConfigForm;
+    } = tripConfigForm;
     layout[rowIndex][colIndex] = { seatStatus: type };
-    setVehicleConfigForm((prev: any) => ({
+    setTripConfigForm((prev: any) => ({
       ...prev,
       capacity: {
         ...prev.capacity,
@@ -137,26 +93,23 @@ export default function VehicleConfig() {
       },
     }));
   };
-  const handleVehicleClick = async () => {
-    // console.log({ vehicleConfigForm });
+  const handleTripConfigClick = async () => {
+    // console.log({ tripConfigForm });
     try {
-      // console.log({ vehicleConfigForm });
-      const payload = JSON.parse(JSON.stringify(vehicleConfigForm));
+      const payload = JSON.parse(JSON.stringify(tripConfigForm));
       const { _id } = payload;
-      // console.log({ _id });
-      let method: any = createVehicle;
+      let method: any = createTrip;
       if (_id) {
         delete payload["_id"];
-        method = updateVehicle;
+        method = updateTrip;
       }
-      // console.log({ payload });
       await method(payload, _id);
       toast("Your changes have been saved.", {
         type: "success",
         theme: isDarkMode ? "dark" : "light",
       });
     } catch (error: any) {
-      // console.log({ error });
+      console.log({ error });
       const errorMsg = error?.response?.data?.message || "Operation Failed!";
       toast(errorMsg, {
         type: "error",
@@ -164,49 +117,173 @@ export default function VehicleConfig() {
       });
     }
   };
-  const handleVehicleConfigFormeChange = (
+  const handletripConfigFormeChange = (
     key: string,
     value: any,
     identifier?: string
   ) => {
     // console.log({ key, value, identifier });
-    if (identifier === "capacity") {
-      setVehicleConfigForm((prev: any) => ({
+    if (identifier === "vehicle") {
+      setTripConfigForm((prev: any) => ({
         ...prev,
-        capacity: {
-          ...prev.capacity,
-          [key]: value,
-        },
+        [key]: value,
+        capacity: getVehicleCapacity(tripConfigForm?.provider, value),
       }));
     } else if (identifier === "provider") {
-      // setSelectedProvider(value)
-      setVehicleConfigForm((prev: any) => ({
+      setTripConfigForm((prev: any) => ({
         ...prev,
         [key]: value,
       }));
+    } else if (identifier === "trip") {
+      setTripConfigForm((prev: any) => ({
+        ...prev,
+        trip: {
+          ...prev?.trip,
+          [key]: value,
+        },
+      }));
     } else {
-      setVehicleConfigForm((prev: any) => ({
+      setTripConfigForm((prev: any) => ({
         ...prev,
         [key]: value,
       }));
     }
-    // console.log({ vehicleConfigForm });
+    // console.log({ tripConfigForm });
   };
 
   useEffect(() => {
     fetchProviders();
   }, []);
-  useEffect(() => {
-    renderSeats();
-  }, [
-    vehicleConfigForm?.capacity?.rows,
-    vehicleConfigForm?.capacity?.columns,
-    vehicleConfigForm?.capacity?.gallaryColumn,
-  ]);
+  //   useEffect(() => {
+  //     renderSeats();
+  //   }, [
+  //     tripConfigForm?.capacity?.rows,
+  //     tripConfigForm?.capacity?.columns,
+  //     tripConfigForm?.capacity?.gallaryColumn,
+  //   ]);
+  const getProviders = () => {
+    return providers.data;
+  };
+  const getProvider = (providerId: string) => {
+    const provider = providers?.data?.find(
+      (item: any) => item?._id === providerId
+    );
+    return provider;
+  };
+  const getVehicles = (providerId: string) => {
+    const provider = getProvider(providerId);
+    // // console.log(provider);
+    return provider?.vehicles || [];
+  };
+  const getVehicle = (providerId: string, vehicleId: string) => {
+    const vehicles = getVehicles(providerId);
+    // // console.log(provider);
+    return vehicles?.find((item: any) => item?._id === vehicleId) || {};
+  };
+
+  const getVehicleCapacity = (providerId: string, vechicleId: string) => {
+    // console.log({ providerId, vechicleId });
+    const vehicles = getVehicles(providerId);
+    // console.log({ vehicles });
+    const vehicle = vehicles?.find((item: any) => item?._id === vechicleId);
+    // console.log({ vehicle });
+    return vehicle?.capacity || {};
+  };
   return (
     <Container className="px-2 md:px-4 lg:px-20 xl:px-32 dark:bg-gray-800 w-full h-screen overflow-auto">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2 md:my-4">
         <div className="flex flex-col gap-4">
+          <Disclosure as="div">
+            {({ open }) => (
+              <>
+                <Disclosure.Button className="flex w-full justify-between rounded-md bg-gray-200 dark:bg-gray-900 px-4 py-2 text-left text-sm font-medium text-gray-800 dark:text-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+                  <span>Trip Details </span>
+                  <BiChevronsDown
+                    className={`${
+                      open ? "rotate-180 transform" : ""
+                    } h-5 w-5 text-gray-600 dark:text-gray-200 `}
+                  />
+                </Disclosure.Button>
+                <Disclosure.Panel className="pt-4 pb-2 text-sm text-gray-500">
+                  <Fieldset
+                    showLegend
+                    legend="Journey Informations"
+                    fieldsetClass="border p-2 border-gray-600 "
+                    legendClass="text-white px-2"
+                  >
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <Input
+                        type="text"
+                        label="Departure Location*"
+                        placeholder="eg: Bengaluru"
+                        value={tripConfigForm?.trip?.departureLocation}
+                        onChange={(event: any) =>
+                          handletripConfigFormeChange(
+                            "departureLocation",
+                            event?.target?.value,
+                            "trip"
+                          )
+                        }
+                      />
+                      <Input
+                        type="text"
+                        label="Arrival Location*"
+                        placeholder="eg: Hyderabad"
+                        value={tripConfigForm?.trip?.arrivalLocation}
+                        onChange={(event: any) =>
+                          handletripConfigFormeChange(
+                            "arrivalLocation",
+                            event?.target?.value,
+                            "trip"
+                          )
+                        }
+                      />
+                      <Input
+                        type="datetime-local"
+                        label="Departure Date-Time*"
+                        placeholder="eg: 10"
+                        value={
+                          tripConfigForm?.trip?.departureAt
+                            ? getFormattedDate(
+                                tripConfigForm?.trip?.departureAt,
+                                "YYYY-MM-DDTHH:mm:ss"
+                              )
+                            : ""
+                        }
+                        onChange={(event: any) =>
+                          handletripConfigFormeChange(
+                            "departureAt",
+                            event?.target?.value,
+                            "trip"
+                          )
+                        }
+                      />
+                      <Input
+                        type="datetime-local"
+                        label="Arrival Date-Time*"
+                        placeholder="eg: 10"
+                        value={
+                          tripConfigForm?.trip?.arrivalAt
+                            ? getFormattedDate(
+                                tripConfigForm?.trip?.arrivalAt,
+                                "YYYY-MM-DDTHH:mm:ss"
+                              )
+                            : ""
+                        }
+                        onChange={(event: any) =>
+                          handletripConfigFormeChange(
+                            "arrivalAt",
+                            event?.target?.value,
+                            "trip"
+                          )
+                        }
+                      />
+                    </div>
+                  </Fieldset>
+                </Disclosure.Panel>
+              </>
+            )}
+          </Disclosure>
           <Disclosure as="div">
             {({ open }) => (
               <>
@@ -227,9 +304,9 @@ export default function VehicleConfig() {
                   >
                     <Select
                       label="Choose Provider*"
-                      data={providers?.data}
+                      data={getProviders()}
                       onChange={(value: any) =>
-                        handleVehicleConfigFormeChange(
+                        handletripConfigFormeChange(
                           "provider",
                           value,
                           "provider"
@@ -237,9 +314,19 @@ export default function VehicleConfig() {
                       }
                       valueKey="_id"
                       displayKey="company"
-                      selected={vehicleConfigForm?.provider}
+                      selected={tripConfigForm?.provider}
                     />
-                    {/* <Input type='text' label="Brand*" placeholder="eg: Tata Moters" value={vehicleConfigForm?.brand} onChange={(event: any) => handleVehicleConfigFormeChange("brand", event?.target?.value)} /> */}
+                    <Select
+                      label="Choose Vehicle*"
+                      data={getVehicles(tripConfigForm?.provider)}
+                      onChange={(value: any) =>
+                        handletripConfigFormeChange("vehicle", value, "vehicle")
+                      }
+                      valueKey="_id"
+                      displayKey="number"
+                      selected={tripConfigForm?.vehicle}
+                    />
+                    {/* <Input type='text' label="Brand*" placeholder="eg: Tata Moters" value={tripConfigForm?.brand} onChange={(event: any) => handletripConfigFormeChange("brand", event?.target?.value)} /> */}
                   </Fieldset>
                 </Disclosure.Panel>
               </>
@@ -249,7 +336,7 @@ export default function VehicleConfig() {
             {({ open }) => (
               <>
                 <Disclosure.Button className="flex w-full justify-between rounded-md bg-gray-200 dark:bg-gray-900 px-4 py-2 text-left text-sm font-medium text-gray-800 dark:text-gray-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
-                  <span>Basic Details </span>
+                  <span>Fair Details </span>
                   <BiChevronsDown
                     className={`${
                       open ? "rotate-180 transform" : ""
@@ -264,51 +351,15 @@ export default function VehicleConfig() {
                     legendClass="text-white px-2"
                   >
                     <Input
-                      type="text"
-                      label="Brand*"
-                      placeholder="eg: Tata Moters"
-                      value={vehicleConfigForm?.brand}
+                      min={0}
+                      type="number"
+                      label="Per Seat Price*"
+                      placeholder="eg: 890.90"
+                      value={tripConfigForm?.perSeatPrice}
                       onChange={(event: any) =>
-                        handleVehicleConfigFormeChange(
-                          "brand",
-                          event?.target?.value
-                        )
-                      }
-                    />
-                    <Input
-                      type="text"
-                      label="Info*"
-                      placeholder="eg: Bharat Benz A/C Sleeper (2+1)"
-                      value={vehicleConfigForm?.info}
-                      onChange={(event: any) =>
-                        handleVehicleConfigFormeChange(
-                          "info",
-                          event?.target?.value
-                        )
-                      }
-                    />
-                    <Input
-                      type="text"
-                      label="Vehicle number*"
-                      placeholder="eg: BH-21-MH-0980"
-                      value={vehicleConfigForm?.number}
-                      onChange={(event: any) =>
-                        handleVehicleConfigFormeChange(
-                          "number",
-                          event?.target?.value
-                        )
-                      }
-                    />
-                    <Input
-                      max={moment().format("YYYY-MM-DD")}
-                      type="date"
-                      label="Purchase Date*"
-                      placeholder="eg: Tata Moters"
-                      value={vehicleConfigForm?.purchase}
-                      onChange={(event: any) =>
-                        handleVehicleConfigFormeChange(
-                          "purchase",
-                          event?.target?.value
+                        handletripConfigFormeChange(
+                          "perSeatPrice",
+                          +event?.target?.value
                         )
                       }
                     />
@@ -338,27 +389,22 @@ export default function VehicleConfig() {
                     >
                       <div className="grid md:grid-cols-2 gap-4">
                         <Input
-                          min={0}
+                          readOnly
+                          classNames="cursor-not-allowed"
+                          isHide={!tripId ? true : false}
                           type="number"
-                          label="Seat Counts*"
-                          placeholder="eg: 10"
-                          value={vehicleConfigForm?.capacity?.seating || null}
-                          onChange={(event: any) =>
-                            handleVehicleConfigFormeChange(
-                              "seating",
-                              +event?.target?.value,
-                              "capacity"
-                            )
-                          }
+                          label="Available Seat*"
+                          value={tripConfigForm?.capacity?.availableSeats}
+                          // onChange={() => {}}
                         />
                         <Input
-                          min={0}
+                          readOnly={tripId ? true : false}
                           type="number"
                           label="Rows (including gallary)*"
                           placeholder="eg: 5"
-                          value={vehicleConfigForm?.capacity?.rows || null}
+                          value={tripConfigForm?.capacity?.rows}
                           onChange={(event: any) =>
-                            handleVehicleConfigFormeChange(
+                            handletripConfigFormeChange(
                               "rows",
                               +event?.target?.value,
                               "capacity"
@@ -366,13 +412,13 @@ export default function VehicleConfig() {
                           }
                         />
                         <Input
-                          min={0}
+                          readOnly={tripId ? true : false}
                           type="number"
                           label="Columns (including gallary)*"
                           placeholder="eg: 5"
-                          value={vehicleConfigForm?.capacity?.columns || null}
+                          value={tripConfigForm?.capacity?.columns}
                           onChange={(event: any) =>
-                            handleVehicleConfigFormeChange(
+                            handletripConfigFormeChange(
                               "columns",
                               +event?.target?.value,
                               "capacity"
@@ -380,15 +426,13 @@ export default function VehicleConfig() {
                           }
                         />
                         <Input
-                          min={0}
+                          readOnly={tripId ? true : false}
                           type="number"
                           label="Gallary column*"
                           placeholder="eg: 10"
-                          value={
-                            vehicleConfigForm?.capacity?.gallaryColumn || null
-                          }
+                          value={tripConfigForm?.capacity?.gallaryColumn}
                           onChange={(event: any) =>
-                            handleVehicleConfigFormeChange(
+                            handletripConfigFormeChange(
                               "gallaryColumn",
                               +event?.target?.value,
                               "capacity"
@@ -399,7 +443,7 @@ export default function VehicleConfig() {
                     </Fieldset>
                   </div>
                   <div className="overflow-auto">
-                    {vehicleConfigForm?.capacity?.layout?.map(
+                    {tripConfigForm?.capacity?.layout?.map(
                       (row: any[], rowIndex: number) => (
                         <div
                           key={rowIndex}
@@ -436,16 +480,36 @@ export default function VehicleConfig() {
             cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
             headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
             bodyClass="p-2"
-            title="Provider Details"
+            title="Trip Details"
           >
             <KeyValueDisplay
-              keyName="Provider"
+              keyName="Departure Location"
+              value={tripConfigForm?.trip?.departureLocation || "NA"}
+            />
+            <KeyValueDisplay
+              keyName="Arrival Location"
+              value={tripConfigForm?.trip?.arrivalLocation || "NA"}
+            />
+            <KeyValueDisplay
+              keyName="Departure Date-Time"
               value={
-                getDisplayValue(
-                  providers?.data,
-                  vehicleConfigForm?.provider,
-                  "company"
-                ) || "NA"
+                tripConfigForm?.trip?.departureAt
+                  ? getFormattedDate(
+                      tripConfigForm?.trip?.departureAt,
+                      "MMMM Do YYYY, hh:mm A"
+                    )
+                  : "NA"
+              }
+            />
+            <KeyValueDisplay
+              keyName="Arrival Date-Time"
+              value={
+                tripConfigForm?.trip?.arrivalAt
+                  ? getFormattedDate(
+                      tripConfigForm?.trip?.arrivalAt,
+                      "MMMM Do YYYY, hh:mm: A"
+                    )
+                  : "NA"
               }
             />
           </Card>
@@ -453,23 +517,29 @@ export default function VehicleConfig() {
             cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
             headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
             bodyClass="p-2"
-            title="Basic Details"
+            title="Provider Details"
           >
             <KeyValueDisplay
-              keyName="Brand"
-              value={vehicleConfigForm?.brand || "NA"}
+              keyName="Provider"
+              value={getProvider(tripConfigForm?.provider)?.company || "NA"}
             />
             <KeyValueDisplay
-              keyName="Info"
-              value={vehicleConfigForm?.info || "NA"}
+              keyName="Vehicle"
+              value={
+                getVehicle(tripConfigForm?.provider, tripConfigForm?.vehicle)
+                  ?.number || "NA"
+              }
             />
+          </Card>
+          <Card
+            cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
+            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
+            bodyClass="p-2"
+            title="Fair Layout"
+          >
             <KeyValueDisplay
-              keyName="Number"
-              value={vehicleConfigForm?.number || "NA"}
-            />
-            <KeyValueDisplay
-              keyName="Purchase Date"
-              value={vehicleConfigForm?.purchase || "NA"}
+              keyName="Per Seat Price"
+              value={tripConfigForm?.perSeatPrice || "NA"}
             />
           </Card>
           <Card
@@ -480,19 +550,19 @@ export default function VehicleConfig() {
           >
             <KeyValueDisplay
               keyName="Seat Counts"
-              value={vehicleConfigForm?.capacity?.seating || "NA"}
+              value={tripConfigForm?.capacity?.seating || "NA"}
             />
             <KeyValueDisplay
               keyName="Rows"
-              value={vehicleConfigForm?.capacity?.rows || "NA"}
+              value={tripConfigForm?.capacity?.rows || "NA"}
             />
             <KeyValueDisplay
               keyName="Columns"
-              value={vehicleConfigForm?.capacity?.columns || "NA"}
+              value={tripConfigForm?.capacity?.columns || "NA"}
             />
             <KeyValueDisplay
               keyName="Gallary Column"
-              value={vehicleConfigForm?.capacity?.gallaryColumn || "NA"}
+              value={tripConfigForm?.capacity?.gallaryColumn || "NA"}
             />
           </Card>
           <Card
@@ -500,7 +570,7 @@ export default function VehicleConfig() {
             bodyClass="p-2"
           >
             <div className="max-h-96- overflow-auto">
-              {vehicleConfigForm?.capacity?.layout?.map(
+              {tripConfigForm?.capacity?.layout?.map(
                 (row: any[], rowIndex: number) => (
                   <div
                     key={rowIndex}
@@ -520,10 +590,11 @@ export default function VehicleConfig() {
       </div>
       <div className="flex justify-center items-center my-4">
         <Button
-          title="Save Vechicle"
-          classNames="py-2 px-4 bg-green-400 hover:bg-green-500 text-white font-semibold w-full"
+          Icon={BiTrip}
+          title={`${tripId ? "Update Trip" : "Create Trip"} `}
+          classNames="py-2 px-4 bg-green-400 hover:bg-green-500 text-white font-semibold w-full !justify-center gap-2"
           onClick={() => {
-            handleVehicleClick();
+            handleTripConfigClick();
           }}
         />
       </div>

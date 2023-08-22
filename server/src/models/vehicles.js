@@ -1,13 +1,9 @@
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
-const capacitySchema = new Schema({
-  seating: {
-    type: Number,
-    default: 0,
-    required: true
-  },
-  rows:{
+export const capacitySchema = new Schema({
+  availableSeats: { type: Number },
+  rows: {
     type: Number,
     default: 0,
     required: true
@@ -17,15 +13,17 @@ const capacitySchema = new Schema({
     default: 0,
     required: true
   },
-  gallaryColumns: {
+  gallaryColumn: {
     type: Number,
     default: 0,
     required: true
   },
-  layout:{
-    type:[[{
-      seatStatus:{type: String},
-    }]], 
+  layout: {
+    type: [[{
+      seatStatus: { type: String },
+      seatNumber: { type: Number },
+      seatPrice: { type: Number },
+    }]],
     required: true
   }
 })
@@ -52,14 +50,13 @@ const vehicleSchema = new Schema(
     purchase: {
       type: String,
       trim: true,
-      required: true, 
+      required: true,
     },
     type: {
       type: String,
       enum: ['bus'],
       default: 'bus'
     },
-
     provider: {
       type: Schema.ObjectId, ref: 'providers', required: true
     },
