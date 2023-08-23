@@ -5,7 +5,7 @@ import {
   getPaginationQueryData,
   getPaginationInfo,
 } from "../helpers/pagination.js";
-const assignSeatNumber = (body) => {
+const preparePayloadForTrip = (body) => {
   console.log(body)
   const { capacity: { layout } } = body;
   let seatNumber = 1
@@ -18,7 +18,8 @@ const assignSeatNumber = (body) => {
   const _body = {
     ...body, capacity: {
       ...body.capacity,
-      layout: _layout
+      layout: _layout,
+      availableSeats: seatNumber - 1
     }
   };
   console.log({ _body })
@@ -28,7 +29,7 @@ const assignSeatNumber = (body) => {
 export const createVehicle = async (request, response) => {
   try {
     let { body } = request;
-    body = assignSeatNumber(body)
+    body = preparePayloadForTrip(body)
     const { provider } = body;
     const vehicle = await create(body);
 
@@ -96,7 +97,7 @@ export const updateVehicle = async (request, response) => {
     let updateBody = request.body;
     const { _id } = request.params;
 
-    updateBody = assignSeatNumber(updateBody)
+    updateBody = preparePayloadForTrip(updateBody)
     // USER_BLACKLIST_KEYS_FOR_UPDATE.forEach((key) => delete updateBody[key]);
     const data = await update({ _id }, updateBody, {
       new: true,

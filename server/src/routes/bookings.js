@@ -1,32 +1,32 @@
 import { Router } from "express";
-import controller from "../controllers/tripPlanner.js";
-import validator from "../middlewares/requestValidators/tripPlanner.js";
+import controller from "../controllers/bookings.js";
+import validator from "../middlewares/requestValidators/bookings.js";
 import validateToken from "../middlewares/validateToken.js";
-const tripPlannerRouter = Router();
+const bookingRouter = Router();
 
-tripPlannerRouter.post(
+bookingRouter.post(
     "/",
     validateToken,
     validator.createValidation,
     controller.createBooking
 );
-// tripPlannerRouter.get(
+// bookingRouter.get(
 //     "/:_id",
 //     validateToken,
 //     controller.getTrip
 // );
-// tripPlannerRouter.get(
+// bookingRouter.get(
 //     "/",
 //     validateToken,
 //     controller.getTrips
 // );
-// tripPlannerRouter.put(
+// bookingRouter.put(
 //     "/:_id",
 //     validateToken,
 //     validator.updateValidation,
 //     controller.updateTrip
 // );
-// tripPlannerRouter.post("/logout", validateToken, controller.logout);
-// tripPlannerRouter.get("/validate-token", controller.validateToken);
+// bookingRouter.post("/logout", validateToken, controller.logout);
+// bookingRouter.get("/validate-token", controller.validateToken);
 
-export default tripPlannerRouter;
+export default bookingRouter;

@@ -1,4 +1,3 @@
-
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment } from "react";
 import Button from "./Button";
@@ -9,10 +8,8 @@ export default function Modal({
   title,
   modalSizeCss = "w-3/4 md:w-2/3 lg:w-1/2",
   body,
-  footer
-}:any) {
- 
-
+  footer,
+}: any) {
   return (
     <>
       <Transition appear show={show} as={Fragment}>
@@ -41,11 +38,11 @@ export default function Modal({
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel
-                  className={`w-full ${modalSizeCss}  transform overflow-hidden rounded-md bg-white dark:bg-gray-800  text-left align-middle border border-gray-300 dark:border-gray-600 shadow-md shadow-gray-200 dark:shadow-gray-600 transition-all`}
+                  className={`w-full ${modalSizeCss}  transform overflow-hidden rounded-md bg-white dark:bg-gray-800  text-left align-middle border border-gray-300 dark:border-gray-200 shadow-md shadow-gray-200 dark:shadow-gray-600 transition-all`}
                 >
                   <Dialog.Title
                     as="div"
-                    className="flex justify-between items-center text-md font-semibold  text-gray-600 dark:text-gray-200 border-b border-gray-200 dark:border-gray-600 px-4 py-4"
+                    className="flex justify-between items-center text-md font-semibold  text-gray-600 dark:text-gray-200 border-b border-gray-200 dark:border-gray-200 px-4 py-4"
                   >
                     {title}
                     <Button
@@ -57,9 +54,7 @@ export default function Modal({
                   </Dialog.Title>
                   <div className="mt-2 p-4">{body}</div>
 
-                  <div className="mt-4 p-4">
-                    {footer}
-                  </div>
+                  <div className="mt-4 p-4">{footer}</div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

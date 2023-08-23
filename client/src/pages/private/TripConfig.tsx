@@ -22,6 +22,7 @@ import { useLocation } from "react-router-dom";
 import { createTrip, fetchTrip, updateTrip } from "@data/rest/tripPlanner";
 import moment from "moment";
 import { getFormattedDate } from "@utils/dates";
+import { getJourneyTime } from "@utils/trip";
 export default function TripConfig() {
   const { isDarkMode } = useTheme();
   const location = useLocation();
@@ -391,14 +392,14 @@ export default function TripConfig() {
                         <Input
                           readOnly
                           classNames="cursor-not-allowed"
-                          isHide={!tripId ? true : false}
+                          // isHide={!tripId ? true : false}
                           type="number"
                           label="Available Seat*"
                           value={tripConfigForm?.capacity?.availableSeats}
                           // onChange={() => {}}
                         />
                         <Input
-                          readOnly={tripId ? true : false}
+                          readOnly
                           type="number"
                           label="Rows (including gallary)*"
                           placeholder="eg: 5"
@@ -412,7 +413,7 @@ export default function TripConfig() {
                           }
                         />
                         <Input
-                          readOnly={tripId ? true : false}
+                          readOnly
                           type="number"
                           label="Columns (including gallary)*"
                           placeholder="eg: 5"
@@ -426,7 +427,7 @@ export default function TripConfig() {
                           }
                         />
                         <Input
-                          readOnly={tripId ? true : false}
+                          readOnly
                           type="number"
                           label="Gallary column*"
                           placeholder="eg: 10"
@@ -475,10 +476,10 @@ export default function TripConfig() {
             )}
           </Disclosure>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 text-gray-600 dark:text-gray-200">
           <Card
             cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
-            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
+            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-200"
             bodyClass="p-2"
             title="Trip Details"
           >
@@ -490,6 +491,7 @@ export default function TripConfig() {
               keyName="Arrival Location"
               value={tripConfigForm?.trip?.arrivalLocation || "NA"}
             />
+
             <KeyValueDisplay
               keyName="Departure Date-Time"
               value={
@@ -512,10 +514,17 @@ export default function TripConfig() {
                   : "NA"
               }
             />
+            <KeyValueDisplay
+              keyName="Journey Time"
+              value={getJourneyTime(
+                tripConfigForm?.trip?.departureAt,
+                tripConfigForm?.trip?.arrivalAt
+              )}
+            />
           </Card>
           <Card
             cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
-            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
+            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-200"
             bodyClass="p-2"
             title="Provider Details"
           >
@@ -533,7 +542,7 @@ export default function TripConfig() {
           </Card>
           <Card
             cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
-            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
+            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-200"
             bodyClass="p-2"
             title="Fair Layout"
           >
@@ -544,14 +553,17 @@ export default function TripConfig() {
           </Card>
           <Card
             cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
-            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
+            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-200"
             bodyClass="p-2"
             title="Vechicle Layout"
           >
-            <KeyValueDisplay
-              keyName="Seat Counts"
-              value={tripConfigForm?.capacity?.seating || "NA"}
-            />
+            {tripConfigForm?.capacity?.availableSeats && (
+              <KeyValueDisplay
+                keyName="Seat Counts"
+                value={tripConfigForm?.capacity?.availableSeats || "NA"}
+              />
+            )}
+
             <KeyValueDisplay
               keyName="Rows"
               value={tripConfigForm?.capacity?.rows || "NA"}

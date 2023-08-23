@@ -2,7 +2,7 @@
 import { validateToken } from "@data/rest/authentication";
 import { createContext, useContext, useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
-import { removeLocalStorage } from "@utils/manageLocalStorage";
+import { removeLocalStorage, setLocalStorage } from "@utils/manageLocalStorage";
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -18,24 +18,26 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: any) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userContext, setUserContext] = useState({});
-  // const navigate = useNavigate();
   async function validateUserToken() {
     try {
-      await validateToken();
-      setUserContext(JSON.parse(localStorage.getItem("userCtx") as string));
+      const {
+        data: { data },
+      } = await validateToken();
+      console.log({ data });
+      setUserContext(data);
+      await setLocalStorage({
+        userCtx: JSON.stringify(data),
+      });
       setIsAuthenticated(true);
     } catch (error) {
       removeLocalStorage(["userCtx", "token"]);
       setIsAuthenticated(false);
-      // navigate("/");
     }
   }
   const resetIsAuthenticatedAndUserContext = () => {
     setIsAuthenticated(false);
     removeLocalStorage(["userCtx", "token"]);
-  };
-  const setIsAuthenticatedAndUserContext = ({ userCtx }: any) => {
-    setIsAuthenticated(true);
+    setUserContext({});
   };
 
   const login = (token: string) => {

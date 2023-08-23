@@ -1,6 +1,5 @@
 import { Fragment, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
-import { useTranslation } from "react-i18next";
 import ThemeSwitch from "@components/themes/ThemeSwitch";
 import { BiSolidUserDetail } from "react-icons/bi";
 import { RiMenuFoldLine, RiMenuUnfoldLine } from "react-icons/ri";
@@ -8,25 +7,26 @@ import darkLogo from "@assets/dark-logo.png";
 import lightLogo from "@assets/light-logo.png";
 import { useTheme } from "@contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
-import useAuthentication from "@hooks/useAuthentication";
 import { toast } from "react-toastify";
 import { logout } from "@data/rest/authentication";
-
+import { useAuth } from "@contexts/AuthContext";
+import { FaUserPlus } from "react-icons/fa";
+import { BiTrip } from "react-icons/bi";
+import { AiFillCar } from "react-icons/ai";
 export default function MobileHeader() {
   const navigate = useNavigate();
-  const { resetIsAuthenticatedAndUserContext, userContext, isAuthenticated } =
-    useAuthentication();
+  const { userContext, isAuthenticated, setIsAuthenticated } = useAuth();
 
   const { isDarkMode } = useTheme();
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation();
+  // const { t } = useTranslation();
 
   async function logoutUser() {
     try {
       await logout({ allDeviceLogout: false });
-      await resetIsAuthenticatedAndUserContext();
-      navigate("/");
-    } catch (error) {
+      setIsAuthenticated(false);
+      navigate("/get-started");
+    } catch (error: any) {
       const errorMsg = error.message;
       toast(errorMsg, {
         type: "error",
@@ -38,7 +38,7 @@ export default function MobileHeader() {
     <>
       <div
         className="md:hidden   
-      z-10 flex justify-between items-center h-16 p-4 md:px-20 md:py-4 gap-4 backdrop-filter bg-transparent backdrop-blur-lg bg-opacity-70 sticky -top-0.5 bottom-0.5 border-b border-gray-200 dark:border-gray-600"
+      z-10 flex justify-between items-center h-16 p-4 md:px-20 md:py-4 gap-4 backdrop-filter bg-transparent backdrop-blur-lg bg-opacity-70 sticky -top-0.5 bottom-0.5 border-b border-gray-200 dark:border-gray-200"
       >
         <img
           onClick={() => {
@@ -117,11 +117,6 @@ export default function MobileHeader() {
                             <div className="flex flex-col w-full">
                               <span className="flex items-center gap-1 text-gray-600 dark:text-white text-sm font-semibold px-2 truncate text-ellipsis w-5/6">
                                 {userContext?.name || "NA"}
-                                {/* <FaTwitterSquare
-                                  width="16px"
-                                  height="16px"
-                                  className="text-green-600 dark:text-yellow-600"
-                                /> */}
                               </span>
                               <span className=" text-gray-400 text-xs font-normal px-2 truncate text-ellipsis w-5/6">
                                 {userContext?.email}
@@ -137,16 +132,47 @@ export default function MobileHeader() {
                             <div className="overflow-auto">
                               <div
                                 onClick={() => navigate("/profile")}
-                                className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-600  cursor-pointer"
+                                className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-200  cursor-pointer"
                               >
                                 <div>
                                   <BiSolidUserDetail size={24} />
                                 </div>
-                                <div>{t("View Profile")}</div>
+                                <div>{"View Profile"}</div>
                               </div>
+                              {userContext?.roles?.includes("ADMIN") && (
+                                <>
+                                  <div
+                                    onClick={() => navigate("/providers")}
+                                    className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-200  cursor-pointer"
+                                  >
+                                    <div>
+                                      <FaUserPlus size={24} />
+                                    </div>
+                                    <div>{"Providers"}</div>
+                                  </div>
+                                  <div
+                                    onClick={() => navigate("/vehicles")}
+                                    className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-200  cursor-pointer"
+                                  >
+                                    <div>
+                                      <AiFillCar size={24} />
+                                    </div>
+                                    <div>{"Vehicles"}</div>
+                                  </div>
+                                  <div
+                                    onClick={() => navigate("/trip-planner")}
+                                    className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-200  cursor-pointer"
+                                  >
+                                    <div>
+                                      <BiTrip size={24} />
+                                    </div>
+                                    <div>{"Trip Planner"}</div>
+                                  </div>
+                                </>
+                              )}
                             </div>
                             <div>
-                              <div className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-y-2 border-gray-300 dark:border-gray-600  cursor-pointer">
+                              <div className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-y-2 border-gray-300 dark:border-gray-200  cursor-pointer">
                                 <div>
                                   <BiSolidUserDetail
                                     size={24}
@@ -154,7 +180,7 @@ export default function MobileHeader() {
                                   />
                                 </div>
                                 <div onClick={() => logoutUser()}>
-                                  <span>{t("Sign Out")}</span>
+                                  <span>{"Sign Out"}</span>
                                 </div>
                               </div>
                             </div>

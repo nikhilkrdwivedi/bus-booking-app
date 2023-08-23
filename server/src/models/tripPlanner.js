@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { capacitySchema } from "./vehicles.js";
 const { Schema, model } = mongoose;
 const tripSchema = new Schema({
     departureLocation: {
@@ -20,6 +19,33 @@ const tripSchema = new Schema({
     }
 }, { _id: false });
 
+const capacitySchema = new Schema({
+    availableSeats: { type: Number },
+    rows: {
+        type: Number,
+        default: 0,
+        required: true
+    },
+    columns: {
+        type: Number,
+        default: 0,
+        required: true
+    },
+    gallaryColumn: {
+        type: Number,
+        default: 0,
+        required: true
+    },
+    layout: {
+        type: [[{
+            seatStatus: { type: String },
+            seatNumber: { type: Number },
+            seatPrice: { type: Number },
+            bookedBy: { type: Schema.ObjectId, ref: 'users' }
+        }]],
+        required: true
+    }
+});
 const tripPlannerSchema = new Schema(
     {
         vehicle: { type: Schema.ObjectId, ref: 'vehicles' },

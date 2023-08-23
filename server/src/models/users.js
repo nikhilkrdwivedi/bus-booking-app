@@ -19,9 +19,10 @@ const userSchema = new Schema(
       trim: true,
       required: true,
     },
-    role: {  type: String,
-      enum: ['admin', 'user'], 
-      default: 'user'  
+    roles: {
+      type: [String],
+      enum: ["ADMIN", "USER"],
+      default: ["USER"],
     },
     tokens: [{ type: String, trim: true }],
     isActive: {

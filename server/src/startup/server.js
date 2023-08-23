@@ -8,6 +8,7 @@ import morgan from "morgan";
 import providerRouter from "../routes/providers.js";
 import vehicleRouter from "../routes/vehicles.js";
 import tripPlannerRouter from "../routes/tripPlanner.js";
+import bookingRouter from "../routes/bookings.js";
 // import { sendEmail } from "../helpers/sendEmail.js";
 // import { sendOtpTemplate } from "../templates/html/sendOtp.js";
 
@@ -28,6 +29,7 @@ export function createServer() {
   app.use("/api/v1/providers/", providerRouter);
   app.use("/api/v1/vehicles/", vehicleRouter);
   app.use("/api/v1/tripplanner/", tripPlannerRouter);
+  app.use("/api/v1/bookings/", bookingRouter);
 
   app.get("/", (request, response) => {
     // IN_PROGRESS STUFF

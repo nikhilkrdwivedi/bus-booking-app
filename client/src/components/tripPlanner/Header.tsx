@@ -14,7 +14,7 @@ export default function Header({ showModal }: any) {
       <div className="justify-self-end">
         <Button
           Icon={BiTrip}
-          iconClass=""
+          iconClass="w-6 h-6"
           title="Create Trip"
           classNames="bg-green-400 font-semibold px-4 py-1 w-auto gap-2  text-gray-600"
           onClick={showModal}

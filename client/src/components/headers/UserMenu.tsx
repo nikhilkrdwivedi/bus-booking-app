@@ -12,18 +12,16 @@ import { BiSolidUserDetail } from "react-icons/bi";
 import { useAuth } from "@contexts/AuthContext";
 
 export default function UserMenu() {
-  const { userContext, isAuthenticated,setIsAuthenticated } =
-    useAuth();
+  const { userContext, isAuthenticated, setIsAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { isDarkMode } = useTheme();
   const [user, setUser] = useState(userContext);
   async function logoutUser() {
     try {
       await logout({ allDeviceLogout: false });
-      setIsAuthenticated(false)
-      // await resetIsAuthenticatedAndUserContext();
-      navigate("/");
-    } catch (error:any) {
+      setIsAuthenticated(false);
+      navigate("/get-started");
+    } catch (error: any) {
       const errorMsg = error.message;
       toast(errorMsg, {
         type: "error",
@@ -73,6 +71,21 @@ export default function UserMenu() {
                     <BiSolidUserDetail size={24} />
                   </div>
                   <div className="text-md font-semibold">View Profile</div>
+                </div>
+              )}
+            </Menu.Item>
+          </div>
+          <div className="px-4 py-2">
+            <Menu.Item>
+              {() => (
+                <div
+                  onClick={() => navigate("/your-booking")}
+                  className="flex justify-start items-center gap-4 text-gray-600 dark:text-gray-200 cursor-pointer"
+                >
+                  <div>
+                    <BiSolidUserDetail size={24} />
+                  </div>
+                  <div className="text-md font-semibold">Your Booking</div>
                 </div>
               )}
             </Menu.Item>

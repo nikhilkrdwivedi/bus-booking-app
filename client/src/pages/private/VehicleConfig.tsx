@@ -50,28 +50,44 @@ export default function VehicleConfig() {
       columns: 0,
       rows: 0,
       gallaryColumn: 0,
-      seating: 0,
+      // seating: 0,
     },
   });
 
   const [providers, setProviders] = useState<any>({});
-  function mergeLayouts(layout1: any[], layout2: any[], defaultValue: any) {
+  function mergeLayouts(matrix: any[], layout: any[], defaultValue: any) {
     const result = [];
 
-    for (let i = 0; i < layout1.length; i++) {
+    for (let i = 0; i < matrix.length; i++) {
       const mergedRow = [];
-      for (let j = 0; j < layout1[i].length; j++) {
-        if (layout2[i] && layout2[i][j] !== undefined) {
-          mergedRow.push(layout2[i][j]);
-        } else if (layout1[i] && layout1[i][j] !== undefined) {
-          mergedRow.push(layout1[i][j]);
+      for (let j = 0; j < matrix[i].length; j++) {
+        if (
+          layout[i] &&
+          layout[i][j] !== undefined &&
+          layout[i][j]["seatStatus"] !== "G" &&
+          matrix[i] &&
+          matrix[i][j] !== undefined &&
+          matrix[i][j]["seatStatus"] !== "G"
+        ) {
+          console.log("layout[i][j] ", layout[i][j]);
+          mergedRow.push(layout[i][j]);
+        } else if (
+          matrix[i] &&
+          matrix[i][j] !== undefined
+          // &&
+          // layout1[i][j]["seatStatus"] == "G"
+        ) {
+          console.log("matrix[i][j] ", matrix[i][j]);
+          mergedRow.push(matrix[i][j]);
         } else {
+          console.log("defaultValue ", defaultValue);
           mergedRow.push(defaultValue);
         }
       }
+      console.log({ mergedRow });
       result.push(mergedRow);
     }
-
+    // console.log(result);
     return result;
   }
   const renderSeats = () => {
@@ -96,8 +112,10 @@ export default function VehicleConfig() {
       }
       return array;
     });
-    const _layout = mergeLayouts(matrix, layout, { seatStatus: "A" });
+    console.log({ matrix, layout });
 
+    const _layout = mergeLayouts(matrix, layout, { seatStatus: "A" });
+    console.log({ _layout });
     setVehicleConfigForm((prev: any) => ({
       ...prev,
       capacity: {
@@ -342,10 +360,12 @@ export default function VehicleConfig() {
                           type="number"
                           label="Seat Counts*"
                           placeholder="eg: 10"
-                          value={vehicleConfigForm?.capacity?.seating || null}
+                          value={
+                            vehicleConfigForm?.capacity?.availableSeats || null
+                          }
                           onChange={(event: any) =>
                             handleVehicleConfigFormeChange(
-                              "seating",
+                              "availableSeats",
                               +event?.target?.value,
                               "capacity"
                             )
@@ -381,6 +401,7 @@ export default function VehicleConfig() {
                         />
                         <Input
                           min={0}
+                          max={vehicleConfigForm?.capacity?.columns - 1 ?? null}
                           type="number"
                           label="Gallary column*"
                           placeholder="eg: 10"
@@ -434,7 +455,7 @@ export default function VehicleConfig() {
         <div className="flex flex-col gap-4">
           <Card
             cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
-            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
+            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-200"
             bodyClass="p-2"
             title="Provider Details"
           >
@@ -451,7 +472,7 @@ export default function VehicleConfig() {
           </Card>
           <Card
             cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
-            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
+            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-200"
             bodyClass="p-2"
             title="Basic Details"
           >
@@ -474,14 +495,17 @@ export default function VehicleConfig() {
           </Card>
           <Card
             cardClass="bg-gray-200 dark:bg-gray-800 rounded-md border border-gray-600"
-            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-600"
+            headerClass="p-2 text-gray-600 dark:text-gray-200 font-semibold border-b border-gray-400 dark:border-gray-200"
             bodyClass="p-2"
             title="Vechicle Layout"
           >
-            <KeyValueDisplay
-              keyName="Seat Counts"
-              value={vehicleConfigForm?.capacity?.seating || "NA"}
-            />
+            {vehicleConfigForm?.capacity?.availableSeats && (
+              <KeyValueDisplay
+                keyName="Seat Counts"
+                value={vehicleConfigForm?.capacity?.availableSeats || "NA"}
+              />
+            )}
+
             <KeyValueDisplay
               keyName="Rows"
               value={vehicleConfigForm?.capacity?.rows || "NA"}

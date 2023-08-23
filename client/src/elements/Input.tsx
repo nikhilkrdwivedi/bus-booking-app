@@ -53,7 +53,7 @@ function Input({
           focus:outline-none  w-full  
           text-gray-500 dark:text-gray-200
             bg-clip-padding
-            border border-solid border-gray-300 dark:border-gray-600
+            border border-solid border-gray-300 dark:border-gray-200
             transition
             ease-in-out
             rounded

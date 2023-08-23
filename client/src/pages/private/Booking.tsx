@@ -1,11 +1,11 @@
 import Container from "@components/containers/Container";
 import Header from "@components/headers/Header";
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // import './App.css'
 import moment from "moment";
-import { TbArmchair } from "react-icons/tb";
+import { GiJourney } from "react-icons/gi";
 import { FaRupeeSign } from "react-icons/fa";
 import { GiSteeringWheel } from "react-icons/gi";
 import { BiBus } from "react-icons/bi";
@@ -31,8 +31,13 @@ import { fetchTrip } from "@data/rest/tripPlanner";
 import { toast } from "react-toastify";
 import { useTheme } from "@contexts/ThemeContext";
 import { getFormattedDate } from "@utils/dates";
+import { createBooking } from "@data/rest/booking";
+import { getJourneyTime } from "@utils/trip";
+import { IoReturnUpBackOutline } from "react-icons/io5";
+import PageHeader from "@components/headers/PageHeader";
 export default function Booking() {
   const { isDarkMode } = useTheme();
+  const navigate = useNavigate();
   const location = useLocation();
   // console.log({ location });
   const tripId = location?.state?._id || "";
@@ -119,11 +124,16 @@ export default function Booking() {
     });
     // return total.toFixed(2)
   };
-  const bookSeat = () => {
+  const bookSeat = async () => {
     console.log({ selectedSeats });
     try {
-      const { data } = await bookSeats(selectedSeats);
-      // console.log({ data: data.data });
+      const payload = {
+        seats: Object.values(selectedSeats),
+        tripId,
+      };
+      console.log(payload);
+      const { data } = await createBooking(payload);
+      console.log({ data });
       setTripInfo(data?.data || {});
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || "Operation Failed!";
@@ -136,22 +146,23 @@ export default function Booking() {
   return (
     <>
       {/* <Header /> */}
-      <Container className="px-2 md:px-4 lg:px-20 xl:px-32 bg-gray-800 w-full h-screen overflow-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="col-span-1 gap-2">
+      <Container className="px-2 md:px-4 lg:px-20 xl:px-32 bg-white dark:bg-gray-800 w-full h-screen overflow-auto">
+        <PageHeader showButton label="Book Seat" location="/" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 my-2">
+          <div className="col-span-1">
             <Card
               title={"Bus Info"}
-              cardClass="flex flex-col bg-gray-200 rounded-md"
-              headerClass="p-2 text-gray-600 font-semibold border-b border-gray-400 dark:border-gray-600"
+              cardClass="flex flex-col bg-gray-200 dark:bg-gray-600 rounded-md w-full text-gray-600 dark:text-gray-200 mb-4"
+              headerClass="p-2 font-semibold border-b border-gray-300 dark:border-gray-200 text-gray-600 dark:text-gray-200"
               bodyClass="p-2"
             >
-              <div className="flex flex-col justify-start items-start">
+              <div className="flex flex-col justify-start items-start gap-2 md:gap-4">
                 <div className="flex items-center gap-2">
                   <div>
-                    <FiMapPin className="text-green-600 w-8 h-8" />
+                    <FiMapPin className="text-green-400 w-8 h-8" />
                   </div>
-                  <div className="text-sm py-2">
-                    <span className="font-semibold text-green-600">
+                  <div className="text-sm py-1">
+                    <span className="font-semibold text-green-400">
                       {" "}
                       Origin:{" "}
                     </span>{" "}
@@ -161,30 +172,21 @@ export default function Booking() {
 
                 <div className="flex items-center gap-2">
                   <div>
-                    <FiMapPin className="text-red-600 w-8 h-8" />
+                    <FiMapPin className="text-pink-400 w-8 h-8" />
                   </div>
-                  <div className="text-sm py-2">
-                    <span className="font-semibold text-red-600">
+                  <div className="text-sm py-1">
+                    <span className="font-semibold text-pink-400">
                       Destination:
                     </span>{" "}
                     {tripInfo?.trip?.arrivalLocation}
                   </div>
                 </div>
-                {/*   
-                  <div className='flex items-center gap-2'>
-                    <div>
-                      <BiBus className="text-sky-600  w-9 h-9" />
-                    </div>
-                    <div className='text-sm py-2'>
-                      <span className='font-semibold text-sky-600' >Bus Number:</span> KN-09-NC-9089</div>
-                  </div> */}
-
                 <div className="flex items-center gap-2">
                   <div>
-                    <MdOutlineDepartureBoard className="text-green-600  w-10 h-10" />
+                    <MdOutlineDepartureBoard className="text-green-400  w-8 h-8" />
                   </div>
-                  <div className="text-sm py-2">
-                    <span className="font-semibold text-green-600">
+                  <div className="text-sm py-1">
+                    <span className="font-semibold text-green-400">
                       Departure:
                     </span>{" "}
                     {getFormattedDate(tripInfo?.trip?.departureAt)}
@@ -193,32 +195,48 @@ export default function Booking() {
 
                 <div className="flex items-center gap-2">
                   <div>
-                    <MdOutlineDepartureBoard className="text-red-600  w-10 h-10" />
+                    <MdOutlineDepartureBoard className="text-pink-400  w-8 h-8" />
                   </div>
-                  <div className="text-sm py-2">
-                    <span className="font-semibold text-red-600">Arrival:</span>{" "}
+                  <div className="text-sm py-1">
+                    <span className="font-semibold text-pink-400">
+                      Arrival:
+                    </span>{" "}
                     {getFormattedDate(tripInfo?.trip?.arrivalAt)}
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div>
+                    <GiJourney className="text-sky-400  w-8 h-8" />
+                  </div>
+                  <div className="text-sm py-1">
+                    <span className="font-semibold text-sky-400">
+                      Journey Time:
+                    </span>{" "}
+                    {getJourneyTime(
+                      tripInfo?.trip?.departureAt,
+                      tripInfo?.trip?.arrivalAt
+                    )}
                   </div>
                 </div>
               </div>
             </Card>
             <Card
               title={"Seat Info"}
-              cardClass="flex flex-col bg-gray-200 rounded-md mt-2"
-              headerClass="p-2 text-gray-600 font-semibold border-b border-gray-400 dark:border-gray-600"
               bodyClass="p-2"
+              cardClass="flex flex-col bg-gray-200 dark:bg-gray-600 rounded-md w-full text-gray-600 dark:text-gray-200"
+              headerClass="p-2 font-semibold border-b border-gray-300 dark:border-gray-200 text-gray-600 dark:text-gray-200"
             >
               {BUS_SEATING_SEAT_TYPES.map(
                 (item: { label: string; symbol: string }, index: number) => (
                   <div
-                    className="flex justify-start items-center py-1 gap-4"
+                    className="flex justify-start items-center gap-2"
                     key={index}
                     disabled={!["A", "S"].includes(item.symbol)}
                   >
                     {
                       <>
                         <SeatingSeat seat={item.symbol} />
-                        <span className="text-md font-semibold text-gray-600">
+                        <span className="text-sm font-normal text-gray-600 dark:text-gray-200">
                           {item.label}
                         </span>
                       </>
@@ -231,16 +249,16 @@ export default function Booking() {
           <div className="col-span-1">
             <Card
               title={"Select Seat"}
-              cardClass="flex flex-col bg-gray-200 rounded-md w-full"
-              headerClass="p-2 text-gray-600 font-semibold border-b border-gray-400 dark:border-gray-600"
+              cardClass="flex flex-col bg-gray-200 dark:bg-gray-600 rounded-md w-full text-gray-600 dark:text-gray-200"
+              headerClass="p-2 font-semibold border-b border-gray-300 dark:border-gray-200 text-gray-600 dark:text-gray-200"
               bodyClass=""
             >
-              <div className="bg-gray-300 flex justify-center items-center px-4 py-2">
-                <div className=" text-md font-semibold text-gray-600">
+              <div className="rounded-b-md border-b border-l border-r border-gray-300 dark:border-gray-200 flex justify-center items-center px-4 py-2">
+                <div className=" text-sm font-normal text-gray-600 dark:text-gray-200">
                   Front Side
                 </div>
               </div>
-              <div className="flex flex-col justify-center items-center p-2 xl:p-4 bg-gray-100 overflow-auto">
+              <div className="flex flex-col justify-center items-center p-2 xl:p-4 bg-gray-200 dark:bg-gray-600  overflow-auto">
                 {(tripInfo?.capacity?.layout || []).map(
                   (row: any, rowIndex: number) => (
                     <div key={rowIndex} className="flex items-center gap-1">
@@ -267,8 +285,8 @@ export default function Booking() {
                   )
                 )}
               </div>
-              <div className="bg-gray-300 flex justify-center items-center px-4 py-2">
-                <div className=" text-md font-semibold text-gray-600">
+              <div className="border border-gray-300 dark:border-gray-200 rounded-t-md flex justify-center items-center px-4 py-2">
+                <div className="text-sm font-normal text-gray-600 dark:text-gray-200">
                   Back Side
                 </div>
               </div>
@@ -278,49 +296,46 @@ export default function Booking() {
           <div className="col-span-1">
             <Card
               title={"Selected Seat Info"}
-              cardClass="flex flex-col bg-gray-200 rounded-md"
-              headerClass="p-2 text-gray-600 font-semibold border-b border-gray-400 dark:border-gray-600"
+              cardClass="flex flex-col bg-gray-200 dark:bg-gray-600 rounded-md w-full text-gray-600 dark:text-gray-200"
+              headerClass="p-2 font-semibold border-b border-gray-300 dark:border-gray-200 text-gray-600 dark:text-gray-200"
               bodyClass="p-2"
             >
-              <div className="border-b-2 border-gray-400 py-2">
-                <div className="text-sm font-bold text-black ">
-                  Onward Journey{" "}
-                </div>
-                <div className="text-md font-normal text-gray-900">
+              <div className="border-b-2 border-gray-300 py-2 text-gray-600 dark:text-gray-200">
+                <div className="text-sm font-normal">Onward Journey </div>
+                <div className="text-md font-normal">
                   From{" "}
-                  <span className="font-semibold text-gray-600">Hyderabad</span>{" "}
+                  <span className="font-semibold  ">
+                    {tripInfo?.trip?.departureLocation}
+                  </span>{" "}
                   To{" "}
-                  <span className="font-semibold text-gray-600">Bengaluru</span>
+                  <span className="font-semibold ">
+                    {" "}
+                    {tripInfo?.trip?.arrivalLocation}
+                  </span>
                 </div>
-                <div className="text-md font-normal text-gray-900">
+                <div className="text-md font-normal ">
                   On{" "}
-                  <span className="font-semibold text-gray-600">
-                    20 August, 2023
+                  <span className="font-semibold ">
+                    {getFormattedDate(tripInfo?.trip?.departureAt)}
                   </span>
                 </div>
               </div>
-              <div className="border-b-2 border-gray-400 py-2">
-                <div className="text-sm font-bold text-black ">
-                  Seats Selected{" "}
-                </div>
-                <div className="text-md font-normal text-gray-900">
+              <div className="border-b-2 border-gray-300 py-2 text-gray-600 dark:text-gray-200">
+                <div className="text-sm font-normal ">Seats Selected </div>
+                <div className="text-md font-normal ">
                   {" "}
-                  <span className="font-semibold text-gray-600">
-                    Seat(s):
-                  </span>{" "}
+                  <span className="font-semibold ">Seat(s):</span>{" "}
                   {selectedSeatsInfo?.selectedSeatCounts}
                 </div>
-                <div className="text-md font-normal text-gray-900">
+                <div className="text-md font-normal">
                   {" "}
-                  <span className="font-semibold text-gray-600">
-                    Total Fare:
-                  </span>{" "}
+                  <span className="font-semibold ">Total Fare:</span>{" "}
                   {selectedSeatsInfo?.total}
                 </div>
               </div>
               <div className="my-2">
                 <Button
-                  classNames="w-full bg-green-400 p-1.5 hover:bg-green-600 hover:text-white"
+                  classNames="w-full bg-green-400 text-gray-600 font-semibold p-1.5 hover:bg-green-600 hover:text-white"
                   title="Continue to Payment"
                   onClick={() => {
                     bookSeat();
