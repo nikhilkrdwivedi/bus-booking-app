@@ -52,22 +52,23 @@ export default function List({ data, onClick }: any) {
           <TableRow>
             <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
             <td className="whitespace-nowrap px-6 py-4">
-              {_.trip?.departureLocation}
+              {_.tripInfo?.departureLocation}
             </td>
             <td className="whitespace-nowrap px-6 py-4">
               {" "}
-              {_.trip?.arrivalLocation}
+              {_.tripInfo?.arrivalLocation}
             </td>
             <td className="whitespace-nowrap px-6 py-4">
-              {moment(_.trip?.departureAt).format("MMMM Do YYYY, hh:mm A") ||
+              {moment(_.tripInfo?.departureAt).format(
+                "MMMM Do YYYY, hh:mm A"
+              ) || "NA"}
+            </td>
+            <td className="whitespace-nowrap px-6 py-4">
+              {moment(_.tripInfo?.arrivalAt).format("MMMM Do YYYY, hh:mm A") ||
                 "NA"}
             </td>
             <td className="whitespace-nowrap px-6 py-4">
-              {moment(_.trip?.arrivalAt).format("MMMM Do YYYY, hh:mm A") ||
-                "NA"}
-            </td>
-            <td className="whitespace-nowrap px-6 py-4">
-              {getJourneyTime(_.trip?.departureAt, _.trip?.arrivalAt)}
+              {getJourneyTime(_.tripInfo?.departureAt, _.tripInfo?.arrivalAt)}
             </td>
             <td className="whitespace-nowrap px-6 py-4">
               {_?.capacity?.availableSeats}

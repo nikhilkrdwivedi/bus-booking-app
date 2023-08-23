@@ -15,11 +15,11 @@ bookingRouter.post(
 //     validateToken,
 //     controller.getTrip
 // );
-// bookingRouter.get(
-//     "/",
-//     validateToken,
-//     controller.getTrips
-// );
+bookingRouter.get(
+    "/",
+    validateToken,
+    controller.getBookings
+);
 // bookingRouter.put(
 //     "/:_id",
 //     validateToken,

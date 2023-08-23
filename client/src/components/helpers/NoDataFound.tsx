@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import LottieAnimationWrapper from "@components/lottie-animations/LottieAnimationWrapper";
 import noDataFoundJson from "@assets/lottie-json/noDataFound.json";
-export default function NoDataFound({ loading, data = [] }: NoDataFoundType) {
+export default function NoDataFound({
+  loading,
+  data = [],
+  description = "Looks like buses went on vacation without telling us",
+  subDescription = "Kindly hold on for the live journey.",
+}: NoDataFoundType) {
   return (
-    // !loading &&
+    !loading &&
     data?.length < 1 && (
       <div className="flex justify-center items-center flex-col gap-4">
         <LottieAnimationWrapper
@@ -11,10 +16,10 @@ export default function NoDataFound({ loading, data = [] }: NoDataFoundType) {
           animationData={noDataFoundJson}
         />
         <div className="text-center text-2xl font-bold text-gray-600 dark:text-gray-200 ">
-          "Looks like buses went on vacation without telling us"
+          {description}
         </div>
         <div className="text-center text-lg font-semibold text-gray-400 dark:text-gray-400 ">
-          Kindly hold on for the live journey.
+          {subDescription}
         </div>
       </div>
     )
@@ -24,4 +29,6 @@ export default function NoDataFound({ loading, data = [] }: NoDataFoundType) {
 type NoDataFoundType = {
   loading: boolean;
   data: any[];
+  description?: string;
+  subDescription?: string;
 };

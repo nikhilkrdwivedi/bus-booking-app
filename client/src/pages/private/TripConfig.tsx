@@ -23,6 +23,7 @@ import { createTrip, fetchTrip, updateTrip } from "@data/rest/tripPlanner";
 import moment from "moment";
 import { getFormattedDate } from "@utils/dates";
 import { getJourneyTime } from "@utils/trip";
+import PageHeader from "@components/headers/PageHeader";
 export default function TripConfig() {
   const { isDarkMode } = useTheme();
   const location = useLocation();
@@ -123,7 +124,7 @@ export default function TripConfig() {
     value: any,
     identifier?: string
   ) => {
-    // console.log({ key, value, identifier });
+    console.log({ key, value, identifier });
     if (identifier === "vehicle") {
       setTripConfigForm((prev: any) => ({
         ...prev,
@@ -135,13 +136,18 @@ export default function TripConfig() {
         ...prev,
         [key]: value,
       }));
-    } else if (identifier === "trip") {
+    } else if (identifier === "tripInfo") {
       setTripConfigForm((prev: any) => ({
         ...prev,
-        trip: {
-          ...prev?.trip,
+        tripInfo: {
+          ...prev?.tripInfo,
           [key]: value,
         },
+      }));
+    } else if (identifier === "perSeatPrice") {
+      setTripConfigForm((prev: any) => ({
+        ...prev,
+        [key]: Math.abs(parseFloat(value)),
       }));
     } else {
       setTripConfigForm((prev: any) => ({
@@ -192,6 +198,7 @@ export default function TripConfig() {
   };
   return (
     <Container className="px-2 md:px-4 lg:px-20 xl:px-32 dark:bg-gray-800 w-full h-screen overflow-auto">
+      <PageHeader showButton label="Manage Trip" location="/trip-planner" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2 md:my-4">
         <div className="flex flex-col gap-4">
           <Disclosure as="div">
@@ -217,12 +224,12 @@ export default function TripConfig() {
                         type="text"
                         label="Departure Location*"
                         placeholder="eg: Bengaluru"
-                        value={tripConfigForm?.trip?.departureLocation}
+                        value={tripConfigForm?.tripInfo?.departureLocation}
                         onChange={(event: any) =>
                           handletripConfigFormeChange(
                             "departureLocation",
                             event?.target?.value,
-                            "trip"
+                            "tripInfo"
                           )
                         }
                       />
@@ -230,12 +237,12 @@ export default function TripConfig() {
                         type="text"
                         label="Arrival Location*"
                         placeholder="eg: Hyderabad"
-                        value={tripConfigForm?.trip?.arrivalLocation}
+                        value={tripConfigForm?.tripInfo?.arrivalLocation}
                         onChange={(event: any) =>
                           handletripConfigFormeChange(
                             "arrivalLocation",
                             event?.target?.value,
-                            "trip"
+                            "tripInfo"
                           )
                         }
                       />
@@ -244,9 +251,9 @@ export default function TripConfig() {
                         label="Departure Date-Time*"
                         placeholder="eg: 10"
                         value={
-                          tripConfigForm?.trip?.departureAt
+                          tripConfigForm?.tripInfo?.departureAt
                             ? getFormattedDate(
-                                tripConfigForm?.trip?.departureAt,
+                                tripConfigForm?.tripInfo?.departureAt,
                                 "YYYY-MM-DDTHH:mm:ss"
                               )
                             : ""
@@ -255,7 +262,7 @@ export default function TripConfig() {
                           handletripConfigFormeChange(
                             "departureAt",
                             event?.target?.value,
-                            "trip"
+                            "tripInfo"
                           )
                         }
                       />
@@ -264,9 +271,9 @@ export default function TripConfig() {
                         label="Arrival Date-Time*"
                         placeholder="eg: 10"
                         value={
-                          tripConfigForm?.trip?.arrivalAt
+                          tripConfigForm?.tripInfo?.arrivalAt
                             ? getFormattedDate(
-                                tripConfigForm?.trip?.arrivalAt,
+                                tripConfigForm?.tripInfo?.arrivalAt,
                                 "YYYY-MM-DDTHH:mm:ss"
                               )
                             : ""
@@ -275,7 +282,7 @@ export default function TripConfig() {
                           handletripConfigFormeChange(
                             "arrivalAt",
                             event?.target?.value,
-                            "trip"
+                            "tripInfo"
                           )
                         }
                       />
@@ -351,16 +358,18 @@ export default function TripConfig() {
                     fieldsetClass="border p-2 border-gray-600 "
                     legendClass="text-white px-2"
                   >
+                    {console.log(tripConfigForm?.perSeatPrice)}
                     <Input
                       min={0}
                       type="number"
                       label="Per Seat Price*"
                       placeholder="eg: 890.90"
-                      value={tripConfigForm?.perSeatPrice}
+                      value={tripConfigForm?.perSeatPrice || null}
                       onChange={(event: any) =>
                         handletripConfigFormeChange(
                           "perSeatPrice",
-                          +event?.target?.value
+                          event?.target?.value,
+                          "perSeatPrice"
                         )
                       }
                     />
@@ -485,19 +494,19 @@ export default function TripConfig() {
           >
             <KeyValueDisplay
               keyName="Departure Location"
-              value={tripConfigForm?.trip?.departureLocation || "NA"}
+              value={tripConfigForm?.tripInfo?.departureLocation || "NA"}
             />
             <KeyValueDisplay
               keyName="Arrival Location"
-              value={tripConfigForm?.trip?.arrivalLocation || "NA"}
+              value={tripConfigForm?.tripInfo?.arrivalLocation || "NA"}
             />
 
             <KeyValueDisplay
               keyName="Departure Date-Time"
               value={
-                tripConfigForm?.trip?.departureAt
+                tripConfigForm?.tripInfo?.departureAt
                   ? getFormattedDate(
-                      tripConfigForm?.trip?.departureAt,
+                      tripConfigForm?.tripInfo?.departureAt,
                       "MMMM Do YYYY, hh:mm A"
                     )
                   : "NA"
@@ -506,9 +515,9 @@ export default function TripConfig() {
             <KeyValueDisplay
               keyName="Arrival Date-Time"
               value={
-                tripConfigForm?.trip?.arrivalAt
+                tripConfigForm?.tripInfo?.arrivalAt
                   ? getFormattedDate(
-                      tripConfigForm?.trip?.arrivalAt,
+                      tripConfigForm?.tripInfo?.arrivalAt,
                       "MMMM Do YYYY, hh:mm: A"
                     )
                   : "NA"
@@ -517,8 +526,8 @@ export default function TripConfig() {
             <KeyValueDisplay
               keyName="Journey Time"
               value={getJourneyTime(
-                tripConfigForm?.trip?.departureAt,
-                tripConfigForm?.trip?.arrivalAt
+                tripConfigForm?.tripInfo?.departureAt,
+                tripConfigForm?.tripInfo?.arrivalAt
               )}
             />
           </Card>

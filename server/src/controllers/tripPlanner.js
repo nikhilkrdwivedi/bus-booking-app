@@ -5,20 +5,8 @@ import {
     getPaginationQueryData,
     getPaginationInfo,
 } from "../helpers/pagination.js";
-import { TRIP_STATUS } from "../constants/trip.js";
+import { getTripStatus } from "../helpers/dates.js";
 
-const getTripStatus = (trip) => {
-    let currentDate = new Date();
-    if (currentDate < trip.arrivalAt && currentDate < trip.departureAt) {
-        return TRIP_STATUS.UPCOMING
-    }
-    if (currentDate > trip.arrivalAt && currentDate > trip.departureAt) {
-        return TRIP_STATUS.COMPLETED
-    }
-
-    return TRIP_STATUS.IN_PROGRESS
-
-}
 const preparePayloadForTrip = (body) => {
     console.log(body)
     const { capacity: { layout }, perSeatPrice } = body;
@@ -31,7 +19,7 @@ const preparePayloadForTrip = (body) => {
     })
     const _body = {
         ...body,
-        tripStatus: getTripStatus(body.trip),
+        tripStatus: getTripStatus(body.tripInfo),
         capacity: {
             ...body.capacity,
             availableSeats: seatNumber - 1,

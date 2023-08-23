@@ -1,39 +1,23 @@
 import Container from "@components/containers/Container";
-import Header from "@components/headers/Header";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // import './App.css'
-import moment from "moment";
 import { GiJourney } from "react-icons/gi";
-import { FaRupeeSign } from "react-icons/fa";
-import { GiSteeringWheel } from "react-icons/gi";
-import { BiBus } from "react-icons/bi";
 import { FiMapPin } from "react-icons/fi";
 import { MdOutlineDepartureBoard } from "react-icons/md";
 import { useState } from "react";
 import { BUS_SEATING_SEAT_TYPES } from "@data/static/seatTypes";
 import Card from "@components/cards/Card";
 import Button from "@elements/Button";
-import { BUS_SEATING_SEATS, BUS_SLEEPER_SEATS } from "@data/static/busSeats";
+import { BUS_SEATING_SEATS } from "@data/static/busSeats";
 import SeatingSeat from "@components/seats/SeatingSeat";
-import SleeperSeat from "@components/seats/SleeperSeat";
-import { BUS_DETAILS } from "@data/static/busDetails";
-import Home from "@pages/private/Home";
-import {
-  Route,
-  Routes,
-  BrowserRouter as Router,
-  Outlet,
-} from "react-router-dom";
-import Private from "@routes/Private";
 import { fetchTrip } from "@data/rest/tripPlanner";
 import { toast } from "react-toastify";
 import { useTheme } from "@contexts/ThemeContext";
 import { getFormattedDate } from "@utils/dates";
 import { createBooking } from "@data/rest/booking";
 import { getJourneyTime } from "@utils/trip";
-import { IoReturnUpBackOutline } from "react-icons/io5";
 import PageHeader from "@components/headers/PageHeader";
 export default function Booking() {
   const { isDarkMode } = useTheme();
@@ -48,7 +32,11 @@ export default function Booking() {
     selectedSeatCounts: 0,
     total: 0.0,
   });
-  const [isAuthenticated, setIsAuthenticate] = useState(true);
+  const resetStatus = () => {
+    setSelectSeats({});
+    setSelectSeatsInfo({});
+  };
+  // const [isAuthenticated, setIsAuthenticate] = useState(true);
   // console.log("INIT:", seat);
   const fetchTripConfig = async (id: string) => {
     try {
@@ -131,10 +119,14 @@ export default function Booking() {
         seats: Object.values(selectedSeats),
         tripId,
       };
-      console.log(payload);
       const { data } = await createBooking(payload);
-      console.log({ data });
+      resetStatus();
       setTripInfo(data?.data || {});
+
+      toast("Booking Confirmed!", {
+        type: "success",
+        theme: isDarkMode ? "dark" : "light",
+      });
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || "Operation Failed!";
       toast(errorMsg, {
@@ -166,7 +158,7 @@ export default function Booking() {
                       {" "}
                       Origin:{" "}
                     </span>{" "}
-                    {tripInfo?.trip?.departureLocation}
+                    {tripInfo?.tripInfo?.departureLocation}
                   </div>
                 </div>
 
@@ -178,7 +170,7 @@ export default function Booking() {
                     <span className="font-semibold text-pink-400">
                       Destination:
                     </span>{" "}
-                    {tripInfo?.trip?.arrivalLocation}
+                    {tripInfo?.tripInfo?.arrivalLocation}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -189,7 +181,7 @@ export default function Booking() {
                     <span className="font-semibold text-green-400">
                       Departure:
                     </span>{" "}
-                    {getFormattedDate(tripInfo?.trip?.departureAt)}
+                    {getFormattedDate(tripInfo?.tripInfo?.departureAt)}
                   </div>
                 </div>
 
@@ -201,7 +193,7 @@ export default function Booking() {
                     <span className="font-semibold text-pink-400">
                       Arrival:
                     </span>{" "}
-                    {getFormattedDate(tripInfo?.trip?.arrivalAt)}
+                    {getFormattedDate(tripInfo?.tripInfo?.arrivalAt)}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
@@ -213,8 +205,8 @@ export default function Booking() {
                       Journey Time:
                     </span>{" "}
                     {getJourneyTime(
-                      tripInfo?.trip?.departureAt,
-                      tripInfo?.trip?.arrivalAt
+                      tripInfo?.tripInfo?.departureAt,
+                      tripInfo?.tripInfo?.arrivalAt
                     )}
                   </div>
                 </div>
@@ -305,18 +297,18 @@ export default function Booking() {
                 <div className="text-md font-normal">
                   From{" "}
                   <span className="font-semibold  ">
-                    {tripInfo?.trip?.departureLocation}
+                    {tripInfo?.tripInfo?.departureLocation}
                   </span>{" "}
                   To{" "}
                   <span className="font-semibold ">
                     {" "}
-                    {tripInfo?.trip?.arrivalLocation}
+                    {tripInfo?.tripInfo?.arrivalLocation}
                   </span>
                 </div>
                 <div className="text-md font-normal ">
                   On{" "}
                   <span className="font-semibold ">
-                    {getFormattedDate(tripInfo?.trip?.departureAt)}
+                    {getFormattedDate(tripInfo?.tripInfo?.departureAt)}
                   </span>
                 </div>
               </div>

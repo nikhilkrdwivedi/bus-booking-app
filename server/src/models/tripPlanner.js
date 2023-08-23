@@ -50,7 +50,7 @@ const tripPlannerSchema = new Schema(
     {
         vehicle: { type: Schema.ObjectId, ref: 'vehicles' },
         provider: { type: Schema.ObjectId, ref: 'providers' },
-        trip: tripSchema,
+        tripInfo: tripSchema,
         capacity: capacitySchema,
         perSeatPrice: { type: Number },
         createdBy: { type: Schema.ObjectId, ref: 'users' },

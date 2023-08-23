@@ -18,6 +18,7 @@ import { useTheme } from "@contexts/ThemeContext";
 import { useLocation } from "react-router-dom";
 import { getDisplayValue } from "@utils/displayValue";
 import moment from "moment";
+import PageHeader from "@components/headers/PageHeader";
 export default function VehicleConfig() {
   const { isDarkMode } = useTheme();
   const location = useLocation();
@@ -223,7 +224,8 @@ export default function VehicleConfig() {
   ]);
   return (
     <Container className="px-2 md:px-4 lg:px-20 xl:px-32 dark:bg-gray-800 w-full h-screen overflow-auto">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2 md:my-4">
+      <PageHeader showButton label="Manage Vehicle" location="/vehicles" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-2 md:my-4 text-gray-600 dark:text-gray-200">
         <div className="flex flex-col gap-4">
           <Disclosure as="div">
             {({ open }) => (
@@ -257,7 +259,6 @@ export default function VehicleConfig() {
                       displayKey="company"
                       selected={vehicleConfigForm?.provider}
                     />
-                    {/* <Input type='text' label="Brand*" placeholder="eg: Tata Moters" value={vehicleConfigForm?.brand} onChange={(event: any) => handleVehicleConfigFormeChange("brand", event?.target?.value)} /> */}
                   </Fieldset>
                 </Disclosure.Panel>
               </>

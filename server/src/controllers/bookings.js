@@ -1,24 +1,13 @@
 import httpResponseMessages from "../constants/httpResponseMessages.js";
-import { update as updateTrip, fetch, countDocuments, fetchOne as fetchTrip } from "../providers/tripPlanner.js";
-import { create } from "../providers/bookings.js";
+import { update as updateTrip, fetch as fetchTrips, countDocuments, fetchOne as fetchTrip } from "../providers/tripPlanner.js";
+import { create, fetch } from "../providers/bookings.js";
 import {
     getPaginationQueryData,
     getPaginationInfo,
 } from "../helpers/pagination.js";
-import { TRIP_STATUS } from "../constants/trip.js";
+import { getTripStatus } from "../helpers/dates.js";
 
-const getTripStatus = (trip) => {
-    let currentDate = new Date();
-    if (currentDate < trip.arrivalAt && currentDate < trip.departureAt) {
-        return TRIP_STATUS.UPCOMING
-    }
-    if (currentDate > trip.arrivalAt && currentDate > trip.departureAt) {
-        return TRIP_STATUS.COMPLETED
-    }
 
-    return TRIP_STATUS.IN_PROGRESS
-
-}
 const preparePayloadForTrip = (body) => {
     console.log(body)
     const { capacity: { layout }, perSeatPrice } = body;
@@ -31,7 +20,7 @@ const preparePayloadForTrip = (body) => {
     })
     const _body = {
         ...body,
-        tripStatus: getTripStatus(body.trip),
+        tripStatus: getTripStatus(body.tripInfo),
         capacity: {
             ...body.capacity,
             availableSeats: seatNumber - 1,
@@ -58,7 +47,7 @@ export const createBooking = async (request, response) => {
             .status(404)
             .json({ message: "No Trip Found", data: trip });
 
-        let { capacity: { availableSeats, layout } } = trip;
+        let { capacity, capacity: { availableSeats, layout } } = trip;
         let updatedCount = 0;
         const _layout = layout.map(row => {
             return row.map(col => {
@@ -79,19 +68,20 @@ export const createBooking = async (request, response) => {
         }
         console.log({ seats, layout })
         const bookingPayload = {
-            tripId,
-            userId: request.user._id,
+            trip: tripId,
+            user: request.user._id,
             seatIds: Object.keys(seats),
             createdBy: request.user._id,
             updatedBy: request.user._id,
         }
-        const [updatedTrip, Booking] = await Promise.all([
-            updateTrip({ _id: tripId }, { $set: { capacity: { availableSeats: (availableSeats - updatedCount), layout: _layout } } }),
+        let applyCapacity = { ...capacity, availableSeats: (availableSeats - updatedCount), layout: _layout }
+        const [updatedTrip, booking] = await Promise.all([
+            updateTrip({ _id: tripId }, { $set: { capacity: applyCapacity } }),
             create(bookingPayload)
         ])
         return response
             .status(200)
-            .json({ message: "Provider successfully created.", data: seats, trip, _layout, updatedCount, requestSeat: requestSeat.length, updatedTrip, Booking });
+            .json({ message: "Provider successfully created.", data: updatedTrip, booking });
 
     } catch (error) {
         console.log({ error })

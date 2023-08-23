@@ -9,7 +9,7 @@ import { TRIP_STATUS } from "../../constants/trip.js";
 const createRequest = {
 
     tripId: joi.string().trim().required().messages({
-        'any.required': 'TripId is mandatory field!',
+        'any.required': 'Trip Id is mandatory field!',
     }),
     seats:
         joi.array().items(joi.object({

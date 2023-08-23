@@ -7,29 +7,29 @@ export const create = async (payload = {}) => {
         throw error;
     }
 };
-// export const fetch = async (
-//     query,
-//     skip = 0,
-//     limit = 0
-// ) => {
-//     try {
-//         const result = await bookingModal.find(query).populate('provider').populate('vehicle')
-//             .skip(skip)
-//             .limit(limit)
-//             .lean();
-//         return result;
-//     } catch (error) {
-//         throw error;
-//     }
-// };
-// export const countDocuments = async (query = {}) => {
-//     try {
-//         const result = await bookingModal.countDocuments(query).lean();
-//         return result;
-//     } catch (error) {
-//         throw error;
-//     }
-// };
+export const fetch = async (
+    query,
+    skip = 0,
+    limit = 0
+) => {
+    try {
+        const result = await bookingModal.find(query).populate('trip')
+            .skip(skip)
+            .limit(limit)
+            .lean();
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};
+export const countDocuments = async (query = {}) => {
+    try {
+        const result = await bookingModal.countDocuments(query).lean();
+        return result;
+    } catch (error) {
+        throw error;
+    }
+};
 
 
 // export const update = async (query = {}, payload = {}) => {

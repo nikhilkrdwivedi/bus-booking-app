@@ -19,13 +19,6 @@ export default function Vechicles() {
   useEffect(() => {
     fetchProviders();
   }, []);
-  const handleCloseModal = () => {
-    setShowModal(false);
-  };
-  const handleShowModal = (provider: any = {}) => {
-    setSelectedVehicle(provider);
-    setShowModal(true);
-  };
   const fetchProviders = async () => {
     try {
       const { data } = await fetchVehicles();

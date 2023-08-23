@@ -7,7 +7,7 @@ import { TRIP_STATUS } from "../../constants/trip.js";
 
 
 const createRequest = {
-    trip: joi.object({
+    tripInfo: joi.object({
         departureLocation: joi.string().trim().required().messages({
             'any.required': 'Departure location is mandatory field!',
         }),
@@ -43,6 +43,7 @@ const createRequest = {
         gallaryColumn: joi.number().required(),
         layout: joi.array().items(
             joi.array().items(joi.object({
+                bookedBy: joi.string().optional(),
                 seatStatus: joi.string().required(),
                 seatNumber: joi.number().optional(),
                 _id: joi.string().optional(),
@@ -53,7 +54,7 @@ const createRequest = {
 };
 const updateRequest = {
     ...createRequest,
-    trip: joi.object({
+    tripInfo: joi.object({
         departureLocation: joi.string().trim().required().messages({
             'any.required': 'Departure location is mandatory field!',
         }),
@@ -75,6 +76,7 @@ const updateRequest = {
     createdAt: joi.string().optional(),
     updatedAt: joi.string().optional(),
     updatedBy: joi.string().optional(),
+    createdBy: joi.string().optional(),
     __v: joi.number().optional(),
     tripStatus: joi.string().valid(TRIP_STATUS.IN_PROGRESS, TRIP_STATUS.COMPLETED, TRIP_STATUS.UPCOMING).optional()
 
