@@ -2,15 +2,15 @@ import { getClassName } from "@utils/classes";
 import { BiChevronLeft, BiChevronRight } from "react-icons/bi";
 
 const containerClass =
-  "flex items-center justify-between bg-white px-4 py-1 sm:px-6";
+  "flex items-center justify-between bg-gray-200 dark:bg-gray-600 px-4 py-1 sm:px-6 rounded-md text-gray-600 dark:text-gray-200";
 const paginationClass =
-  "relative inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20";
+  "relative inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20 text-gray-600 dark:text-gray-200";
 const mobileDevicePaginationClass =
-  "relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50";
+  "relative inline-flex items-center rounded-md border border-gray-300 bg-gray-200 dark:bg-gray-600 px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-200 hover:bg-gray-50";
 const prevClass =
-  "relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20";
+  "relative inline-flex items-center rounded-l-md border border-gray-300 bg-gray-200 dark:bg-gray-600 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20";
 const nextClass =
-  "relative inline-flex items-center rounded-r-md border border-gray-300 bg-white px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20";
+  "relative inline-flex items-center rounded-r-md border border-gray-300 bg-gray-200 dark:bg-gray-600 px-2 py-2 text-sm font-medium text-gray-500 hover:bg-gray-50 focus:z-20";
 
 const LEFT_PAGE = "LEFT";
 const RIGHT_PAGE = "RIGHT";
@@ -43,7 +43,7 @@ export default function Pagination({
 
   const isPrevDisabled = page <= 1;
   const isNextDisabled = page >= pages;
-
+  console.log({ page, pages });
   function handlePageClick(e: any) {
     const {
       target: { value: targetPage },
@@ -83,10 +83,10 @@ export default function Pagination({
   //   };
   // }
   function getFirstCount() {
-    return page * perPage + 1;
+    return (page - 1) * perPage + 1;
   }
   function getLastCount() {
-    let lastCount = page * perPage + perPage;
+    let lastCount = (page - 1) * perPage + perPage;
     lastCount = lastCount < total ? lastCount : total;
     return lastCount;
   }
@@ -137,13 +137,9 @@ export default function Pagination({
   const pagesArray = fetchPageNumbers();
 
   return (
-    <div
-      data-testid="paginationContainer"
-      className={getClassName(containerClass, className)}
-    >
+    <div className={getClassName(containerClass, className)}>
       <div className="flex flex-1 justify-between sm:hidden">
         <button
-          data-testid="mobile-prev-btn"
           className={getClassName(mobileDevicePaginationClass, {
             "cursor-not-allowed": page === 1,
             disabled: page === 1,
@@ -154,7 +150,6 @@ export default function Pagination({
           {"PREVIOUS"}
         </button>
         <button
-          data-testid="mobile-next-btn"
           className={getClassName(mobileDevicePaginationClass, {
             "cursor-not-allowed": page === pages,
             disabled: page === pages,
@@ -167,8 +162,8 @@ export default function Pagination({
       </div>
       <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
         {showCount && total > 0 && (
-          <div data-testid="paginationInfo">
-            <p className="text-sm text-gray-700">
+          <div>
+            <p className="text-sm">
               Showing {getFirstCount()} to {getLastCount()} of {total} results
               {/* <Trans
                 i18nKey="PAGINATION_INFO"
@@ -182,14 +177,12 @@ export default function Pagination({
             </p>
           </div>
         )}
-        <div data-testid="paginationControls">
+        <div>
           <nav
             className="isolate inline-flex -space-x-px rounded-md shadow-sm"
             aria-label="Pagination"
-            data-testid="paginationNav"
           >
             <button
-              data-testid="prev-btn"
               className={getClassName(prevClass, {
                 "cursor-not-allowed": isPrevDisabled,
                 disabled: isPrevDisabled,
@@ -206,13 +199,12 @@ export default function Pagination({
               if (currentPage === LEFT_PAGE) {
                 return (
                   <button
-                    data-testid="left-triple-dot-btn"
                     key={currentPage}
                     value={LEFT_PAGE}
                     onClick={handleMoveLeft}
                     className={getClassName(paginationClass, {
                       "text-gray-500": !selected,
-                      "bg-white": !selected,
+                      "bg-gray-200 dark:bg-gray-600": !selected,
                       "hover:bg-gray-50": !selected,
                       "border-gray-300": !selected,
                     })}
@@ -225,13 +217,12 @@ export default function Pagination({
               if (currentPage === RIGHT_PAGE) {
                 return (
                   <button
-                    data-testid="right-triple-dot-btn"
                     key={currentPage}
                     value={RIGHT_PAGE}
                     onClick={handleMoveRight}
                     className={getClassName(paginationClass, {
                       "text-gray-500": !selected,
-                      "bg-white": !selected,
+                      "bg-gray-200 dark:bg-gray-600": !selected,
                       "hover:bg-gray-50": !selected,
                       "border-gray-300": !selected,
                     })}
@@ -244,20 +235,17 @@ export default function Pagination({
               if (!DIRECTION_ARRAY.includes(currentPage)) {
                 return (
                   <button
-                    data-testid={
-                      !selected ? "page-btn-" + currentPage : "current-page"
-                    }
                     key={currentPage}
                     value={currentPage}
                     onClick={handlePageClick}
                     className={getClassName(paginationClass, {
-                      "text-gray-500": !selected,
-                      "bg-white": !selected,
+                      "text-gray-600 dark:text-gray-200": !selected,
+                      "bg-gray-200 dark:bg-gray-600": !selected,
                       "hover:bg-gray-50": !selected,
-                      "border-gray-300": !selected,
-                      "text-indigo-600": selected,
-                      "bg-indigo-50": selected,
-                      "border-indigo-500": selected,
+                      // "border-gray-600": !selected,
+                      "!text-gray-600": selected,
+                      "bg-gray-400 dark:bg-gray-200": selected,
+                      // "border-gray-600": selected,
                       "z-10": selected,
                     })}
                   >
@@ -268,7 +256,6 @@ export default function Pagination({
             })}
 
             <button
-              data-testid="next-btn"
               className={getClassName(nextClass, {
                 "cursor-not-allowed": isNextDisabled,
                 disabled: isNextDisabled,

@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { BiSolidUserDetail } from "react-icons/bi";
 import { useAuth } from "@contexts/AuthContext";
+import { LuBookPlus } from "react-icons/lu";
 
 export default function UserMenu() {
   const { userContext, isAuthenticated, setIsAuthenticated } = useAuth();
@@ -70,7 +71,7 @@ export default function UserMenu() {
                   <div>
                     <BiSolidUserDetail size={24} />
                   </div>
-                  <div className="text-md font-semibold">View Profile</div>
+                  <div className="text-md font-semibold">Profile</div>
                 </div>
               )}
             </Menu.Item>
@@ -83,9 +84,9 @@ export default function UserMenu() {
                   className="flex justify-start items-center gap-4 text-gray-600 dark:text-gray-200 cursor-pointer"
                 >
                   <div>
-                    <BiSolidUserDetail size={24} />
+                    <LuBookPlus size={24} />
                   </div>
-                  <div className="text-md font-semibold">Your Booking</div>
+                  <div className="text-md font-semibold">Booking</div>
                 </div>
               )}
             </Menu.Item>

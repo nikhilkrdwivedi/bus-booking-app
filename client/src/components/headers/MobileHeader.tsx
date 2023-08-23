@@ -13,6 +13,7 @@ import { useAuth } from "@contexts/AuthContext";
 import { FaUserPlus } from "react-icons/fa";
 import { BiTrip } from "react-icons/bi";
 import { AiFillCar } from "react-icons/ai";
+import { LuBookPlus } from "react-icons/lu";
 export default function MobileHeader() {
   const navigate = useNavigate();
   const { userContext, isAuthenticated, setIsAuthenticated } = useAuth();
@@ -137,7 +138,16 @@ export default function MobileHeader() {
                                 <div>
                                   <BiSolidUserDetail size={24} />
                                 </div>
-                                <div>{"View Profile"}</div>
+                                <div>{"Profile"}</div>
+                              </div>
+                              <div
+                                onClick={() => navigate("/your-booking")}
+                                className="flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-200 bg-gray-50 dark:bg-gray-800 border-b-2 border-gray-300 dark:border-gray-200  cursor-pointer"
+                              >
+                                <div>
+                                  <LuBookPlus size={24} />
+                                </div>
+                                <div>{"Booking"}</div>
                               </div>
                               {userContext?.roles?.includes("ADMIN") && (
                                 <>

@@ -13,10 +13,12 @@ export default function Providers() {
   const [showModal, setShowModal] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState<any>({});
   const [providers, setProviders] = useState<any>({});
-
+  const [pagination, setPagination] = useState({
+    currentPage: 0,
+  });
   useEffect(() => {
     fetchProviders();
-  }, []);
+  }, [pagination]);
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -26,7 +28,7 @@ export default function Providers() {
   };
   const fetchProviders = async () => {
     try {
-      const { data } = await fetch();
+      const { data } = await fetch(pagination);
       // console.log({ data });
       setProviders({ data: data.data, pagination: data?.pagination });
     } catch (error: any) {
@@ -101,14 +103,20 @@ export default function Providers() {
           data={providers.data}
           onClick={(provider: any) => handleShowModal(provider)}
         />
-        <Pagination
-          page={providers?.pagination?.currentPage}
-          pages={providers?.pagination?.totalPages}
-          total={providers?.pagination?.totalRecords}
-          perPage={providers?.pagination?.limit}
-          showCount
-          className="bottom-0 sticky"
-        />
+        {providers?.pagination?.totalRecords && (
+          <Pagination
+            page={providers?.pagination?.currentPage + 1}
+            pages={providers?.pagination?.totalPages}
+            total={providers?.pagination?.totalRecords}
+            perPage={providers?.pagination?.limit}
+            showCount
+            className="bottom-0 sticky"
+            onPageClick={(requiredPage: number) => {
+              console.log({ requiredPage });
+              setPagination({ currentPage: requiredPage - 1 });
+            }}
+          />
+        )}
       </div>
 
       <ProviderModal

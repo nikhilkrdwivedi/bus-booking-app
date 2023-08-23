@@ -13,7 +13,20 @@ export const fetch = async (
     limit = 0
 ) => {
     try {
-        const result = await bookingModal.find(query).populate('trip')
+        // path: 'books',
+        //     populate: [
+        //         { path: 'genre' },
+        //         { path: 'author' }
+        //     ]
+
+        const result = await bookingModal.find(query).populate({
+            path: 'trip',
+            populate: [
+                { path: 'vehicle' },
+                { path: 'provider' }
+            ]
+        })
+            // .populate('trip')
             .skip(skip)
             .limit(limit)
             .lean();

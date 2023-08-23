@@ -13,14 +13,16 @@ export default function TripPlanner() {
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
   const [trips, setTrips] = useState<any>({});
-
+  const [pagination, setPagination] = useState({
+    currentPage: 0,
+  });
   useEffect(() => {
     getTrips();
-  }, []);
+  }, [pagination]);
 
   const getTrips = async () => {
     try {
-      const { data } = await fetchTrips();
+      const { data } = await fetchTrips(pagination);
       setTrips({ data: data.data, pagination: data?.pagination });
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || "Operation Failed!";
@@ -39,13 +41,32 @@ export default function TripPlanner() {
           data={trips.data}
           onClick={(trip: any) => navigate("/trip-config", { state: trip })}
         />
+
+        {providers?.pagination?.totalRecords && (
+          <Pagination
+            page={providers?.pagination?.currentPage + 1}
+            pages={providers?.pagination?.totalPages}
+            total={providers?.pagination?.totalRecords}
+            perPage={providers?.pagination?.limit}
+            showCount
+            className="bottom-0 sticky"
+            onPageClick={(requiredPage: number) => {
+              console.log({ requiredPage });
+              setPagination({ currentPage: requiredPage - 1 });
+            }}
+          />
+        )}
         <Pagination
-          page={trips?.pagination?.currentPage}
+          page={trips?.pagination?.currentPage + 1}
           pages={trips?.pagination?.totalPages}
           total={trips?.pagination?.totalRecords}
           perPage={trips?.pagination?.limit}
           showCount
           className="bottom-0 sticky"
+          onPageClick={(requiredPage: number) => {
+            console.log({ requiredPage });
+            setPagination({ currentPage: requiredPage - 1 });
+          }}
         />
       </div>
     </Container>

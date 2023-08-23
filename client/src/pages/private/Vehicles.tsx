@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "@components/containers/Container";
 import Pagination from "@components/paginations/Pagination";
 import Header from "@components/vehicles/Header";
@@ -12,16 +13,16 @@ import { toast } from "react-toastify";
 export default function Vechicles() {
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
-  const [selectedVehicle, setSelectedVehicle] = useState<any>({});
   const [vehicles, setVehicles] = useState<any>({});
-
+  const [pagination, setPagination] = useState({
+    currentPage: 0,
+  });
   useEffect(() => {
     fetchProviders();
-  }, []);
+  }, [pagination]);
   const fetchProviders = async () => {
     try {
-      const { data } = await fetchVehicles();
+      const { data } = await fetchVehicles(pagination);
       // console.log({ data });
       setVehicles({ data: data.data, pagination: data?.pagination });
     } catch (error: any) {
@@ -43,13 +44,31 @@ export default function Vechicles() {
             navigate("/vehicle-config", { state: vehicle })
           }
         />
+        {vehicles?.pagination?.totalRecords && (
+          <Pagination
+            page={vehicles?.pagination?.currentPage + 1}
+            pages={vehicles?.pagination?.totalPages}
+            total={vehicles?.pagination?.totalRecords}
+            perPage={vehicles?.pagination?.limit}
+            showCount
+            className="bottom-0 sticky"
+            onPageClick={(requiredPage: number) => {
+              console.log({ requiredPage });
+              setPagination({ currentPage: requiredPage - 1 });
+            }}
+          />
+        )}
         <Pagination
-          page={vehicles?.pagination?.currentPage}
+          page={vehicles?.pagination?.currentPage + 1}
           pages={vehicles?.pagination?.totalPages}
           total={vehicles?.pagination?.totalRecords}
           perPage={vehicles?.pagination?.limit}
           showCount
           className="bottom-0 sticky"
+          onPageClick={(requiredPage: number) => {
+            console.log({ requiredPage });
+            setPagination({ currentPage: requiredPage - 1 });
+          }}
         />
       </div>
     </Container>

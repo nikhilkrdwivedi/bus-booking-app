@@ -2,7 +2,7 @@
 
 export const getPaginationQueryData = (pageInfo) => {
   let currentPage = parseInt(pageInfo?.currentPage) || 0;
-  let limit = parseInt(pageInfo?.limit) || 10;
+  let limit = parseInt(pageInfo?.limit) || 1;
   let skip = currentPage * limit;
 
   if (pageInfo?.sendAllRecords === "YES") {
