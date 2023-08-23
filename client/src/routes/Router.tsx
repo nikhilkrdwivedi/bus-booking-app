@@ -8,14 +8,12 @@ import TripConfig from "@pages/private/TripConfig";
 import VehicleConfig from "@pages/private/VehicleConfig";
 import Vechicles from "@pages/private/Vehicles";
 import RequireAuth from "@routes/RequireAuthentication";
-import { USERS_ROLES_MAPPING } from "../constants.ts/userRoles";
+import { USERS_ROLES_MAPPING } from "@constants/userRoles";
 import GetStarted from "@pages/public/GetStarted";
 import PageNotFound from "@pages/common/PageNotFound";
 import Profile from "@pages/private/Profile";
 import UserBookings from "@pages/private/UserBookings";
-const NotFound = () => {
-  return <h2>hi HOw are you?</h2>;
-};
+
 export default function Router() {
   const { isAuthenticated } = useAuth();
 

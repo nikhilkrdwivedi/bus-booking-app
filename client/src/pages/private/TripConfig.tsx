@@ -11,28 +11,25 @@ import Input from "@elements/Input";
 import Select from "@elements/Select";
 import { fetch } from "@data/rest/providers";
 import { BiTrip } from "react-icons/bi";
-// import { createVehicle, fetchVehicle, updateVehicle } from "@data/rest/vehicle";
 import { Disclosure } from "@headlessui/react";
 import { useEffect, useState } from "react";
 import { BiChevronsDown } from "react-icons/bi";
 import { toast } from "react-toastify";
 import { useTheme } from "@contexts/ThemeContext";
 import { useLocation } from "react-router-dom";
-// import { getDisplayValue } from "@utils/displayValue";
 import { createTrip, fetchTrip, updateTrip } from "@data/rest/tripPlanner";
-import moment from "moment";
 import { getFormattedDate } from "@utils/dates";
 import { getJourneyTime } from "@utils/trip";
 import PageHeader from "@components/headers/PageHeader";
+
 export default function TripConfig() {
   const { isDarkMode } = useTheme();
   const location = useLocation();
-  // console.log({ location });
   const tripId = location?.state?._id || "";
+
   const fetchTripConfig = async (id: string) => {
     try {
       const { data } = await fetchTrip(id);
-      // console.log({ data: data.data });
       setTripConfigForm(data.data);
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || "Operation Failed!";
@@ -42,24 +39,13 @@ export default function TripConfig() {
       });
     }
   };
+
   useEffect(() => {
     if (tripId.length) {
       fetchTripConfig(tripId);
     }
   }, [tripId]);
-  // const fetchVehicleConfig = async (id: string) => {
-  //   try {
-  //     const { data } = await fetchVehicle(id);
-  //     // console.log({ data: data.data });
-  //     setTripConfigForm(data.data);
-  //   } catch (error: any) {
-  //     const errorMsg = error?.response?.data?.message || "Operation Failed!";
-  //     toast(errorMsg, {
-  //       type: "error",
-  //       theme: isDarkMode ? "dark" : "light",
-  //     });
-  //   }
-  // };
+
   const [tripConfigForm, setTripConfigForm] = useState<any>({});
 
   const [providers, setProviders] = useState<any>({});
@@ -82,7 +68,6 @@ export default function TripConfig() {
     rowIndex: number,
     colIndex: number
   ) => {
-    // console.log({ type, rowIndex, colIndex });
     const {
       capacity: { layout },
     } = tripConfigForm;
@@ -95,8 +80,8 @@ export default function TripConfig() {
       },
     }));
   };
+
   const handleTripConfigClick = async () => {
-    // console.log({ tripConfigForm });
     try {
       const payload = JSON.parse(JSON.stringify(tripConfigForm));
       const { _id } = payload;
@@ -119,12 +104,12 @@ export default function TripConfig() {
       });
     }
   };
+
   const handletripConfigFormeChange = (
     key: string,
     value: any,
     identifier?: string
   ) => {
-    console.log({ key, value, identifier });
     if (identifier === "vehicle") {
       setTripConfigForm((prev: any) => ({
         ...prev,
@@ -155,47 +140,39 @@ export default function TripConfig() {
         [key]: value,
       }));
     }
-    // console.log({ tripConfigForm });
   };
 
   useEffect(() => {
     fetchProviders();
   }, []);
-  //   useEffect(() => {
-  //     renderSeats();
-  //   }, [
-  //     tripConfigForm?.capacity?.rows,
-  //     tripConfigForm?.capacity?.columns,
-  //     tripConfigForm?.capacity?.gallaryColumn,
-  //   ]);
+
   const getProviders = () => {
     return providers.data;
   };
+
   const getProvider = (providerId: string) => {
     const provider = providers?.data?.find(
       (item: any) => item?._id === providerId
     );
     return provider;
   };
+
   const getVehicles = (providerId: string) => {
     const provider = getProvider(providerId);
-    // // console.log(provider);
     return provider?.vehicles || [];
   };
+
   const getVehicle = (providerId: string, vehicleId: string) => {
     const vehicles = getVehicles(providerId);
-    // // console.log(provider);
     return vehicles?.find((item: any) => item?._id === vehicleId) || {};
   };
 
   const getVehicleCapacity = (providerId: string, vechicleId: string) => {
-    // console.log({ providerId, vechicleId });
     const vehicles = getVehicles(providerId);
-    // console.log({ vehicles });
     const vehicle = vehicles?.find((item: any) => item?._id === vechicleId);
-    // console.log({ vehicle });
     return vehicle?.capacity || {};
   };
+
   return (
     <Container className="px-2 md:px-4 lg:px-20 xl:px-32 dark:bg-gray-800 w-full h-screen overflow-auto">
       <PageHeader showButton label="Manage Trip" location="/trip-planner" />
@@ -334,7 +311,6 @@ export default function TripConfig() {
                       displayKey="number"
                       selected={tripConfigForm?.vehicle}
                     />
-                    {/* <Input type='text' label="Brand*" placeholder="eg: Tata Moters" value={tripConfigForm?.brand} onChange={(event: any) => handletripConfigFormeChange("brand", event?.target?.value)} /> */}
                   </Fieldset>
                 </Disclosure.Panel>
               </>
@@ -358,7 +334,6 @@ export default function TripConfig() {
                     fieldsetClass="border p-2 border-gray-600 "
                     legendClass="text-white px-2"
                   >
-                    {console.log(tripConfigForm?.perSeatPrice)}
                     <Input
                       min={0}
                       type="number"
@@ -461,7 +436,6 @@ export default function TripConfig() {
                         >
                           {row?.map((col: any, colIndex: number) => (
                             <div key={rowIndex + colIndex}>
-                              {/* <SeatingSeat seat={col} /> */}
                               <SeatOptionsCard
                                 cardId={rowIndex + colIndex + 1}
                                 onClick={(value: string) => {

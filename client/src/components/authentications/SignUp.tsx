@@ -1,8 +1,6 @@
-/* eslint-disable react/prop-types */
-// import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Input from "@elements/Input";
 import Button from "@elements/Button";
-// import { fromError } from "@apollo/client";
 
 export default function SignUp({
   changeFormType,
@@ -10,7 +8,7 @@ export default function SignUp({
   dataErrors,
   onChange,
   submitForm,
-}) {
+}: SignUpType) {
   return (
     <div className="flex flex-col justify-center items-center gap-4 py-8 px-4">
       <div className="text-gray-600 dark:text-gray-200 text-2xl font-bold">
@@ -26,6 +24,7 @@ export default function SignUp({
         rounded-md shadow-md dark:shadow-gray-600 shadow-gray-300 dark:bg-gray-800 bg-gray-100"
       >
         <Input
+          type="text"
           placeholder="Enter Full Name"
           label="Full Name*"
           value={data?.name || ""}
@@ -33,6 +32,7 @@ export default function SignUp({
           onChange={(e) => onChange(e.target.value, "name")}
         />
         <Input
+          type="text"
           placeholder="Enter Email"
           label="Email*"
           value={data?.email || ""}
@@ -45,7 +45,7 @@ export default function SignUp({
           type="password"
           value={data?.password || ""}
           error={dataErrors?.password || ""}
-          onChange={(e) => onChange(e.target.value, "password")}
+          onChange={(e) => onChange(e?.target?.value, "password")}
         />
         <Button
           title={"Register"}
@@ -63,3 +63,11 @@ export default function SignUp({
     </div>
   );
 }
+
+type SignUpType = {
+  changeFormType?: () => void;
+  data?: any;
+  dataErrors?: any;
+  onChange: (args: string, arg1: string) => void;
+  submitForm?: () => void;
+};

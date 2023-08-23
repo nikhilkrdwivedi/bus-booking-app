@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import qs from "querystring";
 import axiosHelper from "@data/axiosHelper";
 import ENV from "@environment/index";

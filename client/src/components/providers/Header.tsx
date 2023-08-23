@@ -1,6 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Button from "@elements/Button";
-import Input from "@elements/Input";
-import { IoReturnUpBackOutline } from "react-icons/io5";
 import { FaUserPlus } from "react-icons/fa";
 
 export default function Header({ showModal }: any) {
@@ -9,9 +8,6 @@ export default function Header({ showModal }: any) {
       <div className="justify-self-start text-gray-600 dark:text-white font-normal text-lg">
         Providers
       </div>
-      {/* <div className="w-full">
-        <Input type="text" placeholder="Search by  name" />
-      </div> */}
       <div className="justify-self-end">
         <Button
           title="Provider"

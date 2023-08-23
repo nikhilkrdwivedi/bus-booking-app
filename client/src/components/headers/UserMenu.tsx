@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Menu, Transition } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 
 import { HiMiniChevronDown } from "react-icons/hi2";
-import useAuthentication from "@hooks/useAuthentication";
 import { toast } from "react-toastify";
 import { logout } from "@data/rest/authentication";
 import { useTheme } from "@contexts/ThemeContext";
@@ -16,7 +16,6 @@ export default function UserMenu() {
   const { userContext, isAuthenticated, setIsAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { isDarkMode } = useTheme();
-  const [user, setUser] = useState(userContext);
   async function logoutUser() {
     try {
       await logout({ allDeviceLogout: false });
@@ -30,9 +29,7 @@ export default function UserMenu() {
       });
     }
   }
-  useEffect(() => {
-    setUser(userContext);
-  }, [userContext]);
+
   if (!isAuthenticated) return null;
 
   return (
@@ -91,12 +88,6 @@ export default function UserMenu() {
               )}
             </Menu.Item>
           </div>
-          {/* <div className="px-4 py-2">
-            <Menu.Item>{({ active }) =>(<div className="flex justify-start items-center gap-4 text-gray-600 dark:text-gray-200">
-                    <div><BiSolidUserDetail size={24}/></div>
-                    <div className="text-md font-semibold">View Profile</div>
-                </div>)}</Menu.Item>
-          </div> */}
           <div className="px-4 py-2">
             <Menu.Item>
               {() => (

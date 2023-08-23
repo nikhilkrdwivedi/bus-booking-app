@@ -1,5 +1,4 @@
 import Container from "@components/containers/Container";
-// import Button from "@elements/Button";
 import { useNavigate } from "react-router-dom";
 
 import { logout } from "@data/rest/authentication";

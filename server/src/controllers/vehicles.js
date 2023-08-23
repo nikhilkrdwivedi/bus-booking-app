@@ -5,6 +5,7 @@ import {
   getPaginationQueryData,
   getPaginationInfo,
 } from "../helpers/pagination.js";
+
 const preparePayloadForTrip = (body) => {
   console.log(body)
   const { capacity: { layout } } = body;
@@ -22,7 +23,6 @@ const preparePayloadForTrip = (body) => {
       availableSeats: seatNumber - 1
     }
   };
-  console.log({ _body })
   return _body
 
 }

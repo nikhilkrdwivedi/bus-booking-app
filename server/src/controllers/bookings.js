@@ -1,6 +1,6 @@
 import httpResponseMessages from "../constants/httpResponseMessages.js";
-import { update as updateTrip, fetch as fetchTrips, countDocuments, fetchOne as fetchTrip } from "../providers/tripPlanner.js";
-import { create, fetch } from "../providers/bookings.js";
+import { update as updateTrip, fetch as fetchTrips, fetchOne as fetchTrip } from "../providers/tripPlanner.js";
+import { create, fetch, countDocuments } from "../providers/bookings.js";
 import {
     getPaginationQueryData,
     getPaginationInfo,
@@ -35,7 +35,6 @@ const preparePayloadForTrip = (body) => {
 export const createBooking = async (request, response) => {
     try {
         let { body: { tripId, seats } } = request;
-        console.log(tripId, '<--->', seats)
         const requestSeat = seats;
         seats = seats.reduce(function (result, item) {
             result[item._id] = item;
@@ -53,11 +52,9 @@ export const createBooking = async (request, response) => {
             return row.map(col => {
                 if (seats[col._id] && col.seatStatus === 'A') {
                     updatedCount++;
-                    console.log({ col })
-                    console.log("---")
                     return { ...col, bookedBy: request?.user?._id, seatStatus: 'B' }
                 }
-                return col
+                return col;
             })
         })
 
@@ -66,7 +63,6 @@ export const createBooking = async (request, response) => {
                 .status(404)
                 .json({ message: "Seats aren't available, refresh page!", data: trip });
         }
-        console.log({ seats, layout })
         const bookingPayload = {
             trip: tripId,
             user: request.user._id,
@@ -92,7 +88,7 @@ export const createBooking = async (request, response) => {
 }
 export const getBookings = async (request, response) => {
     try {
-        const query = { isActive: true }
+        const query = { isActive: true, user: request?.user?._id }
         const { skip, limit, currentPage } = getPaginationQueryData(request.query);
         const [data, total] = await Promise.all([
             fetch(query, skip, limit),

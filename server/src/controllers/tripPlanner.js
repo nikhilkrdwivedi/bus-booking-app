@@ -52,7 +52,9 @@ export const createTrip = async (request, response) => {
 }
 export const getTrips = async (request, response) => {
     try {
-        const query = { isActive: true }
+        const query = {
+            isActive: true, "capacity.availableSeats": { $gt: 0 }, "tripInfo.arrivalAt": { $gt: new Date() }, "tripInfo.departureAt": { $gt: new Date() },
+        }
         const { skip, limit, currentPage } = getPaginationQueryData(request.query);
         const [data, total] = await Promise.all([
             fetch(query, skip, limit),

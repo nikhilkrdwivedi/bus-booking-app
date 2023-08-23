@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Card from "@components/cards/Card";
 import SeatOptionsCard from "@components/cards/SeatOptionsCard";
@@ -19,17 +20,16 @@ import { useLocation } from "react-router-dom";
 import { getDisplayValue } from "@utils/displayValue";
 import moment from "moment";
 import PageHeader from "@components/headers/PageHeader";
+
 export default function VehicleConfig() {
   const { isDarkMode } = useTheme();
   const location = useLocation();
-  // console.log({ location });
+
   const vehicleId = location?.state?._id || "";
-  // const { state:{_id } } = location;
-  // // console.log({state})
+
   const fetchVehicleConfig = async (id: string) => {
     try {
       const { data } = await fetchVehicle(id);
-      // console.log({ data: data.data });
       setVehicleConfigForm(data.data);
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || "Operation Failed!";
@@ -51,7 +51,6 @@ export default function VehicleConfig() {
       columns: 0,
       rows: 0,
       gallaryColumn: 0,
-      // seating: 0,
     },
   });
 
@@ -70,30 +69,27 @@ export default function VehicleConfig() {
           matrix[i][j] !== undefined &&
           matrix[i][j]["seatStatus"] !== "G"
         ) {
-          console.log("layout[i][j] ", layout[i][j]);
           mergedRow.push(layout[i][j]);
-        } else if (
-          matrix[i] &&
-          matrix[i][j] !== undefined
-          // &&
-          // layout1[i][j]["seatStatus"] == "G"
-        ) {
-          console.log("matrix[i][j] ", matrix[i][j]);
+        } else if (matrix[i] && matrix[i][j] !== undefined) {
           mergedRow.push(matrix[i][j]);
         } else {
-          console.log("defaultValue ", defaultValue);
           mergedRow.push(defaultValue);
         }
       }
       console.log({ mergedRow });
       result.push(mergedRow);
     }
-    // console.log(result);
     return result;
   }
   const renderSeats = () => {
-    const { capacity: { columns, rows, gallaryColumn, layout } = {} } =
-      vehicleConfigForm ?? {};
+    const {
+      capacity: { columns, rows, gallaryColumn, layout } = {
+        columns: 0,
+        rows: 0,
+        gallaryColumn: 0,
+        layout: 0,
+      },
+    } = vehicleConfigForm ?? {};
     if (columns < 1 || rows < 1) {
       setVehicleConfigForm((prev: any) => ({
         ...prev,
@@ -105,7 +101,7 @@ export default function VehicleConfig() {
       return;
     }
     // Initialize an empty seat matrix
-    // console.log({ gallaryColumn, layout });
+    //
     const matrix = new Array(rows).fill("").map((_, index) => {
       const array = new Array(columns).fill({ seatStatus: "A" });
       if (index < rows - 1) {
@@ -113,10 +109,7 @@ export default function VehicleConfig() {
       }
       return array;
     });
-    console.log({ matrix, layout });
-
     const _layout = mergeLayouts(matrix, layout, { seatStatus: "A" });
-    console.log({ _layout });
     setVehicleConfigForm((prev: any) => ({
       ...prev,
       capacity: {
@@ -125,6 +118,7 @@ export default function VehicleConfig() {
       },
     }));
   };
+
   const fetchProviders = async () => {
     try {
       const { data } = await fetch({ sendAllRecords: "YES" });
@@ -143,7 +137,6 @@ export default function VehicleConfig() {
     rowIndex: number,
     colIndex: number
   ) => {
-    // console.log({ type, rowIndex, colIndex });
     const {
       capacity: { layout },
     } = vehicleConfigForm;
@@ -156,26 +149,22 @@ export default function VehicleConfig() {
       },
     }));
   };
+
   const handleVehicleClick = async () => {
-    // console.log({ vehicleConfigForm });
     try {
-      // console.log({ vehicleConfigForm });
       const payload = JSON.parse(JSON.stringify(vehicleConfigForm));
       const { _id } = payload;
-      // console.log({ _id });
       let method: any = createVehicle;
       if (_id) {
         delete payload["_id"];
         method = updateVehicle;
       }
-      // console.log({ payload });
       await method(payload, _id);
       toast("Your changes have been saved.", {
         type: "success",
         theme: isDarkMode ? "dark" : "light",
       });
     } catch (error: any) {
-      // console.log({ error });
       const errorMsg = error?.response?.data?.message || "Operation Failed!";
       toast(errorMsg, {
         type: "error",
@@ -183,12 +172,12 @@ export default function VehicleConfig() {
       });
     }
   };
+
   const handleVehicleConfigFormeChange = (
     key: string,
     value: any,
     identifier?: string
   ) => {
-    // console.log({ key, value, identifier });
     if (identifier === "capacity") {
       setVehicleConfigForm((prev: any) => ({
         ...prev,
@@ -198,7 +187,6 @@ export default function VehicleConfig() {
         },
       }));
     } else if (identifier === "provider") {
-      // setSelectedProvider(value)
       setVehicleConfigForm((prev: any) => ({
         ...prev,
         [key]: value,
@@ -209,7 +197,6 @@ export default function VehicleConfig() {
         [key]: value,
       }));
     }
-    // console.log({ vehicleConfigForm });
   };
 
   useEffect(() => {

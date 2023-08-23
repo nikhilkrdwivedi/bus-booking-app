@@ -1,5 +1,4 @@
 import Loader from "@elements/Loader";
-import React from "react";
 
 export default function FullScreenLoader({
   show,

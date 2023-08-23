@@ -1,6 +1,6 @@
-import React from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { RxColorWheel } from "react-icons/rx";
+
 export default function Loader({ onClick, showCloseIcon }: LoaderTypeType) {
   return (
     <div

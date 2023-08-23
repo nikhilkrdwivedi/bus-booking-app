@@ -10,15 +10,11 @@ export const create = async (payload = {}) => {
 export const fetch = async (
     query,
     skip = 0,
-    limit = 0
+    limit = 0,
+    sortBy = 'createdAt',
+    orderBy = -1,
 ) => {
     try {
-        // path: 'books',
-        //     populate: [
-        //         { path: 'genre' },
-        //         { path: 'author' }
-        //     ]
-
         const result = await bookingModal.find(query).populate({
             path: 'trip',
             populate: [
@@ -26,7 +22,7 @@ export const fetch = async (
                 { path: 'provider' }
             ]
         })
-            // .populate('trip')
+            .sort({ [sortBy]: orderBy })
             .skip(skip)
             .limit(limit)
             .lean();

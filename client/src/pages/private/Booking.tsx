@@ -1,8 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Container from "@components/containers/Container";
 import { useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
-// import './App.css'
+import { useLocation } from "react-router-dom";
 import { GiJourney } from "react-icons/gi";
 import { FiMapPin } from "react-icons/fi";
 import { MdOutlineDepartureBoard } from "react-icons/md";
@@ -10,7 +9,6 @@ import { useState } from "react";
 import { BUS_SEATING_SEAT_TYPES } from "@data/static/seatTypes";
 import Card from "@components/cards/Card";
 import Button from "@elements/Button";
-import { BUS_SEATING_SEATS } from "@data/static/busSeats";
 import SeatingSeat from "@components/seats/SeatingSeat";
 import { fetchTrip } from "@data/rest/tripPlanner";
 import { toast } from "react-toastify";
@@ -19,29 +17,26 @@ import { getFormattedDate } from "@utils/dates";
 import { createBooking } from "@data/rest/booking";
 import { getJourneyTime } from "@utils/trip";
 import PageHeader from "@components/headers/PageHeader";
+
 export default function Booking() {
   const { isDarkMode } = useTheme();
-  const navigate = useNavigate();
   const location = useLocation();
-  // console.log({ location });
   const tripId = location?.state?._id || "";
   const [tripInfo, setTripInfo] = useState<any>({});
-  const [seat, setSeat] = useState(BUS_SEATING_SEATS);
   const [selectedSeats, setSelectSeats] = useState({});
   const [selectedSeatsInfo, setSelectSeatsInfo] = useState({
     selectedSeatCounts: 0,
-    total: 0.0,
+    total: 0,
   });
+
   const resetStatus = () => {
     setSelectSeats({});
-    setSelectSeatsInfo({});
+    setSelectSeatsInfo({ selectedSeatCounts: 0, total: 0.0 });
   };
-  // const [isAuthenticated, setIsAuthenticate] = useState(true);
-  // console.log("INIT:", seat);
+
   const fetchTripConfig = async (id: string) => {
     try {
       const { data } = await fetchTrip(id);
-      // console.log({ data: data.data });
       setTripInfo(data?.data || {});
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || "Operation Failed!";
@@ -51,25 +46,25 @@ export default function Booking() {
       });
     }
   };
+
   useEffect(() => {
     if (tripId.length) {
       fetchTripConfig(tripId);
     }
   }, [tripId]);
+
   useEffect(() => {
     getTotalFair();
   }, [selectedSeats]);
+
   const updateSeat = (
     selectedSeat: string,
     rowIndex: number,
     colIndex: number
   ) => {
     const action = selectedSeat === "A" ? "S" : "A";
-    // console.log({ selectedSeat, rowIndex, colIndex });
     const _layout = JSON.parse(JSON.stringify(tripInfo?.capacity?.layout));
-    // console.log({ _seat, action });
     _layout[rowIndex][colIndex]["seatStatus"] = action;
-    // console.log({ seatNo: _seat[rowIndex][colIndex] });
     if (action === "S") {
       setSelectSeats({
         ...selectedSeats,
@@ -89,31 +84,23 @@ export default function Booking() {
         layout: _layout,
       },
     }));
-
-    // console.log({ selectedSeats, seat });
   };
+
   const getTotalFair = () => {
     let total = 0;
     const _selectedSeats = JSON.parse(JSON.stringify(selectedSeats));
     Object.keys(_selectedSeats).forEach((item) => {
       total += _selectedSeats[item]["seatPrice"];
     });
-    // console.log("--->", { total });
-    // for(const seat in _selectedSeats){
-    //     // console.log("seat==>",seat, _selectedSeats[seat], _selectedSeats[seat]['price'])
-    //     total =+ _selectedSeats[seat]['price']
-    // };
 
-    // console.log("===>", { total });
     setSelectSeatsInfo({
       ...selectedSeatsInfo,
-      total: total.toFixed(2),
+      total: total.toFixed(2) as unknown as number,
       selectedSeatCounts: Object.keys(_selectedSeats).length,
     });
-    // return total.toFixed(2)
   };
+
   const bookSeat = async () => {
-    console.log({ selectedSeats });
     try {
       const payload = {
         seats: Object.values(selectedSeats),
@@ -137,7 +124,6 @@ export default function Booking() {
   };
   return (
     <>
-      {/* <Header /> */}
       <Container className="px-2 md:px-4 lg:px-20 xl:px-32 bg-white dark:bg-gray-800 w-full h-screen overflow-auto">
         <PageHeader showButton label="Book Seat" location="/" />
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 my-2">
@@ -223,7 +209,6 @@ export default function Booking() {
                   <div
                     className="flex justify-start items-center gap-2"
                     key={index}
-                    disabled={!["A", "S"].includes(item.symbol)}
                   >
                     {
                       <>
@@ -264,13 +249,6 @@ export default function Booking() {
                           }}
                         >
                           <SeatingSeat seat={col.seatStatus} />
-                          {/* <span className="text-xs">{col?.seatPrice}</span>
-                          {col?.seatNumber > 0 && (
-                            <span className="text-xs">({col?.seatNumber})</span>
-                          )} */}
-                          {/* <span className="text-xs">({col?.seatNumber})</span> */}
-                          {/* <SleeperSeat seat={col.bookingStatus} /> */}
-                          {/* {getSeat(col.bookingStatus)} */}
                         </button>
                       ))}
                     </div>

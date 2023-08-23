@@ -1,15 +1,13 @@
-// AuthContext.tsx
+/* eslint-disable react-refresh/only-export-components */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { validateToken } from "@data/rest/authentication";
 import { createContext, useContext, useState, useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
 import { removeLocalStorage, setLocalStorage } from "@utils/manageLocalStorage";
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  login: (token: string) => void;
-  logout: () => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
-  setUserContext: (oject: any) => void;
+  setUserContext: (args: any) => void;
   userContext: any;
 };
 
@@ -40,16 +38,6 @@ export const AuthProvider = ({ children }: any) => {
     setUserContext({});
   };
 
-  const login = (token: string) => {
-    // console.log(token);
-    // Perform token validation logic
-    // Update isAuthenticated state
-  };
-
-  const logout = () => {
-    // Clear token and update isAuthenticated state
-  };
-
   // Run token validation on page refresh or route change
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -64,8 +52,6 @@ export const AuthProvider = ({ children }: any) => {
   return (
     <AuthContext.Provider
       value={{
-        login,
-        logout,
         isAuthenticated,
         setIsAuthenticated,
         userContext,

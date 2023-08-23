@@ -37,10 +37,7 @@ export default function MobileHeader() {
   }
   return (
     <>
-      <div
-        className="md:hidden   
-      z-10 flex justify-between items-center h-16 p-4 md:px-20 md:py-4 gap-4 backdrop-filter bg-transparent backdrop-blur-lg bg-opacity-70 sticky -top-0.5 bottom-0.5 border-b border-gray-200 dark:border-gray-200"
-      >
+      <div className="md:hidden z-10 flex justify-between items-center dark:!bg-gray-800  h-16 p-4 md:px-20 md:py-4 gap-4 backdrop-filter bg-transparent backdrop-blur-lg bg-opacity-70 sticky -top-0.5 bottom-0.5 border-b border-gray-200 dark:border-gray-200">
         <img
           onClick={() => {
             navigate("/");

@@ -1,5 +1,4 @@
-/* eslint-disable react/prop-types */
-// import React from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Input from "@elements/Input";
 import Button from "@elements/Button";
 
@@ -9,7 +8,7 @@ export default function SignIn({
   dataErrors,
   onChange,
   submitForm,
-}:any) {
+}: SignInType) {
   return (
     <div className="flex flex-col justify-center items-center gap-4 py-8 px-4">
       <div className="text-gray-600 dark:text-gray-200 text-2xl font-bold">
@@ -25,11 +24,12 @@ export default function SignIn({
         rounded-md shadow-md dark:shadow-gray-600 shadow-gray-300 dark:bg-gray-800 bg-gray-100"
       >
         <Input
+          type="text"
           placeholder="Enter Email"
           label="Email*"
           value={data?.email || ""}
           error={dataErrors?.email || ""}
-          onChange={(e) => onChange(e.target.value, "email")}
+          onChange={(e: any) => onChange(e.target.value, "email")}
         />
         <Input
           placeholder="Enter Password"
@@ -37,16 +37,13 @@ export default function SignIn({
           type="password"
           value={data?.password || ""}
           error={dataErrors?.password || ""}
-          onChange={(e:any) => onChange(e.target.value, "password")}
+          onChange={(e: any) => onChange(e.target.value, "password")}
         />
         <Button
           title={"Sign In"}
           classNames="!w-full bg-green-500 p-2 text-white font-semibold text-md"
           onClick={submitForm}
         />
-        {/* <div className="text-gray-600 dark:text-gray-200 text-sm font-semibold text-center p-2">
-          Recover Password
-        </div> */}
       </div>
       <div
         className="text-gray-600 dark:text-gray-200 text-md font-semibold underline m-2 cursor-pointer"
@@ -54,7 +51,14 @@ export default function SignIn({
       >
         Don&apos;t have an account?
       </div>
-      {/* </div> */}
     </div>
   );
 }
+
+type SignInType = {
+  changeFormType?: () => void;
+  data?: any;
+  dataErrors?: any;
+  onChange: (arg0: string, arg1: string) => void;
+  submitForm?: () => void;
+};

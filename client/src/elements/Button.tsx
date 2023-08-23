@@ -1,6 +1,4 @@
-// import React from "react";
-import PropTypes from "prop-types";
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export default function Button({
   title,
   Icon,
@@ -8,7 +6,7 @@ export default function Button({
   onClick,
   IconSize = 18,
   iconClass,
-}:ButtonTypes) {
+}: ButtonTypes) {
   return (
     <button
       onClick={onClick}
@@ -21,10 +19,10 @@ export default function Button({
 }
 
 type ButtonTypes = {
-  title?: string,
-  Icon?: any,
-  classNames?:string,
-  IconSize?: number,
-  iconClass?: string,
-  onClick?:  (event: React.MouseEvent<HTMLButtonElement>) => void,
+  title?: string;
+  Icon?: any;
+  classNames?: string;
+  IconSize?: number;
+  iconClass?: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
 };

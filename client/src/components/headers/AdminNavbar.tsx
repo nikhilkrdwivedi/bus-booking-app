@@ -1,19 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Fragment } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { BiTrip } from "react-icons/bi";
-import { RiMenuUnfoldLine } from "react-icons/ri";
 import { BsDatabaseFillLock } from "react-icons/bs";
 import { AiFillCar, AiOutlineClose } from "react-icons/ai";
 import { FaUserPlus } from "react-icons/fa";
-import { useTheme } from "@contexts/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@contexts/AuthContext";
 
 export default function AdminNavbar({ open, setOpen }: any) {
   const navigate = useNavigate();
-  const { userContext, isAuthenticated } = useAuth();
-
-  const { isDarkMode } = useTheme();
+  const { isAuthenticated } = useAuth();
 
   return (
     <>

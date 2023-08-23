@@ -1,7 +1,6 @@
-import React from "react";
 import { LuPersonStanding } from "react-icons/lu";
-export default function SleeperSeat({ seat }: any) {
-  // console.log(seat);
+
+export default function SleeperSeat({ seat }: SleeperSeatType) {
   switch (seat) {
     case "A":
       return (
@@ -31,3 +30,6 @@ export default function SleeperSeat({ seat }: any) {
       return <div className="w-8 h-16"></div>;
   }
 }
+type SleeperSeatType = {
+  seat: string;
+};

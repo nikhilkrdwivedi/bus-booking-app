@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Card from "@components/cards/Card";
 import Input from "@elements/Input";
 import Button from "@elements/Button";
@@ -42,7 +43,7 @@ export default function UpdatePasswordCard() {
         type: "success",
         theme: isDarkMode ? "dark" : "light",
       });
-      setPasswords({});
+      setPasswords({ newPassword: "", password: "" });
     } catch (error: any) {
       const errorMsg = error?.response?.data?.message || "Try again 🤠";
       toast(errorMsg, {

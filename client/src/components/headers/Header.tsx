@@ -1,28 +1,12 @@
 import { useAuth } from "@contexts/AuthContext";
-import React, { useState } from "react";
+import { useState } from "react";
 import { PiListBold } from "react-icons/pi";
-// export default function Header() {
-//   const {userContext} = useAuth()
-//   // console.log({userContext})
-//   return (
-//     <div className='h-16 flex justify-between items-center bg-transparent px-4 lg:px-32'>
-//         <div className='flex justify-between items-center w-full'>
-//             <div>Nikhil~Bus</div>
-//             <div className='text-black'>{userContext.name || 'NA'}</div>
-//             <div className='w-8 h-8 bg-pink-400 rounded-full flex justify-center items-center'>N</div>
-//         </div>
-//     </div>
-//   )
-// }
-
 import darkLogo from "@assets/dark-logo.png";
 import lightLogo from "@assets/light-logo.png";
 import { useTheme } from "@contexts/ThemeContext";
 import ThemeSwitch from "@components/themes/ThemeSwitch";
 import { useNavigate } from "react-router-dom";
 import UserMenu from "./UserMenu";
-import MobileHeader from "./MobileHeader";
-import Test from "./Test";
 import AdminNavbar from "./AdminNavbar";
 
 export default function Header() {

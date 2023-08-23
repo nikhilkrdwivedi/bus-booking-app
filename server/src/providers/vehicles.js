@@ -10,10 +10,13 @@ export const create = async (payload = {}) => {
 export const fetch = async (
   query,
   skip = 0,
-  limit = 0
+  limit = 0,
+  sortBy = 'createdAt',
+  orderBy = -1,
 ) => {
   try {
     const result = await VehicleModal.find(query).populate('provider')
+      .sort({ [sortBy]: orderBy })
       .skip(skip)
       .limit(limit)
       .lean();

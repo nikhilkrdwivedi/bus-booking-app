@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import Card from "@components/cards/Card";
 import Input from "@elements/Input";
 import Button from "@elements/Button";
-import myImg from "@assets/myImg.jpg";
 import { useEffect, useState } from "react";
 import { updateUser } from "@data/rest/users";
 import { toast } from "react-toastify";
@@ -23,7 +23,7 @@ export default function ProfileCard() {
   }, [userContext]);
 
   const validatedRequest = () => {
-    const errors = {};
+    const errors: any = {};
     if (!form?.name) {
       errors["name"] = "Name is required!";
     }
@@ -41,7 +41,7 @@ export default function ProfileCard() {
         type: "success",
         theme: isDarkMode ? "dark" : "light",
       });
-    } catch (error) {
+    } catch (error: any) {
       const errorMsg = error?.response?.data?.message || "Try again 🤠";
       toast(errorMsg, {
         type: "error",
@@ -53,6 +53,7 @@ export default function ProfileCard() {
     <Card cardClass="bg-gray-200 dark:bg-gray-800 rounded-md" bodyClass="p-2">
       <div className="">
         <Input
+          type="text"
           label="Your Name"
           value={form?.name}
           error={formError?.name || ""}

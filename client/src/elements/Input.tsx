@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import { TbClipboardCopy } from "react-icons/tb";
@@ -94,12 +95,12 @@ function Input({
   );
 }
 type InputType = {
-  min?: string | number | Date;
-  max?: string | number | Date;
+  min?: string | number;
+  max?: string | number;
   label?: string;
   type: string;
-  value?: string | number | Date;
-  onChange?: (value: any) => void;
+  value: string | number | readonly string[] | undefined;
+  onChange?: (arg?: any) => void;
   placeholder?: string;
   disabled?: boolean;
   classNames?: string;
@@ -108,28 +109,5 @@ type InputType = {
   error?: string;
   errorClass?: string;
 };
-// Input.propTypes = {
-//   label: PropTypes.string,
-//   type: PropTypes.string,
-//   value: PropTypes.string.isRequired,
-//   onChange: PropTypes.func,
-//   placeholder: PropTypes.string,
-//   disabled: PropTypes.bool,
-//   classNames: PropTypes.string,
-//   isHide: PropTypes.bool,
-//   readOnly: PropTypes.bool,
-//   error: PropTypes.string,
-//   errorClass: PropTypes.string,
-// };
-// Input.defaultProps = {
-//   placeholder: "",
-//   disabled: false,
-//   classNames: "",
-//   isHide: false,
-//   readOnly: false,
-//   error: "",
-//   errorClass: "",
-//   onChange: null,
-//   type: "text",
-// };
+
 export default Input;

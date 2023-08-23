@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axiosHelper from "@data/axiosHelper";
-import ENV from "@environment";
+import ENV from "@environment/index";
 
 const USER_ENDPOINT = "/api/v1/users";
 

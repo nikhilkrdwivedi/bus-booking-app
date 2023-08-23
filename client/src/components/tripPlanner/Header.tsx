@@ -1,15 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Button from "@elements/Button";
-import Input from "@elements/Input";
 import { BiTrip } from "react-icons/bi";
 
 export default function Header({ showModal }: HeaderType) {
   return (
-    <div className="grid place-items-center justify-items-stretch grid-cols-1 md:grid-cols-3 gap-1 py-4 border-b border-gray-600">
+    <div className="grid place-items-center justify-items-stretch grid-cols-2 gap-1 py-4 border-b border-gray-600">
       <div className="justify-self-start text-gray-600 dark:text-white font-normal text-lg">
         Trip Planner
-      </div>
-      <div className="w-full">
-        <Input type="text" placeholder="Search by Departure/Arrival" />
       </div>
       <div className="justify-self-end">
         <Button
